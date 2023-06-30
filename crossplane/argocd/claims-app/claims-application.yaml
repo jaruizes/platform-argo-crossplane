@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: k8s-claims
+  name: teams-claims
   namespace: argocd
 spec:
   destination:
     name: ''
-    namespace: k8s-teams
+    namespace: teams
     server: 'https://kubernetes.default.svc'
   source:
     path: claims
