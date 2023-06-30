@@ -1,0 +1,348 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: customk8scluster
+  labels:
+    provider: aws
+    cluster: eks
+spec:
+  patchSets:
+    - name: metadata
+      patches:
+        - fromFieldPath: metadata.labels
+  compositeTypeRef:
+    apiVersion: jaruiz.crossplane.io/v1
+    kind: customk8scluster
+  resources:
+    - name: eks-cluster-role
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Role
+        spec:
+          forProvider:
+            assumeRolePolicy: |
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "eks.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              }
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster-role"
+
+    - name: eks-role-policy-attachment
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+            roleRef:
+              name: eks-cluster-role
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-policy"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster-role"
+
+    - name: eks-vpc
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: VPC
+        spec:
+          forProvider:
+            enableDnsHostnames: true
+            region: eu-west-2
+            cidrBlock: 172.16.0.0/16
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+
+    - name: eks-subnet1
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Subnet
+        spec:
+          forProvider:
+            region: eu-west-2
+            mapPublicIpOnLaunch: true
+            availabilityZone: eu-west-2b
+            vpcIdRef:
+              name: sample-vpc
+            cidrBlock: 172.16.10.0/24
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+
+    - name: eks-subnet2
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Subnet
+        spec:
+          forProvider:
+            region: eu-west-2
+            mapPublicIpOnLaunch: true
+            availabilityZone: eu-west-2c
+            vpcIdRef:
+              name: sample-vpc
+            cidrBlock: 172.16.11.0/24
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+
+    - name: eks-private-subnet
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Subnet
+        spec:
+          forProvider:
+            region: eu-west-2
+            availabilityZone: eu-west-2b
+            vpcIdRef:
+              name: sample-vpc
+            cidrBlock: 172.16.12.0/24
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-private-subnet"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+    - name: eks-routeTable
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTable
+        metadata:
+          name: example
+          annotations:
+            meta.upbound.io/example-id: eks/v1beta1/cluster
+        spec:
+          forProvider:
+            region: eu-west-2
+            vpcIdRef:
+              name: sample-vpc
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+
+    - name: eks-routetable-association
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTableAssociation
+        spec:
+          forProvider:
+            region: eu-west-2
+            routeTableIdRef:
+              name: example
+            subnetIdRef:
+              name: private-subnet
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable-association"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-private-subnet"
+    - name: eks-internetGateway
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: InternetGateway
+        spec:
+          forProvider:
+            region: eu-west-2
+            vpcIdRef:
+              name: sample-vpc
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-ig"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+
+    - name: eks-default-route-table
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: DefaultRouteTable
+        spec:
+          forProvider:
+            defaultRouteTableIdRef:
+              name: sample-vpc
+            region: eu-west-2
+            route:
+              - gatewayIdRef:
+                  name: example
+                cidrBlock: 0.0.0.0/0
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-default-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.defaultRouteTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.route.gatewayIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-ig"
+
+    - name: eks-cluster
+      base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: Cluster
+        spec:
+          forProvider:
+            region: eu-west-2
+            roleArnRef:
+              name: teama-cluster-role
+            vpcConfig:
+              - subnetIdRefs:
+                  - name: k8s-team-a-subnet1
+                  - name: k8s-team-a-subnet2
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleArnRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster-role"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcConfig[0].subnetIdRefs[0].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcConfig[0].subnetIdRefs[1].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet2"
+#        - type: ToCompositeFieldPath
+#          fromFieldPath: metadata.name
+#          toFieldPath: status.clusterName
+#        - type: ToCompositeFieldPath
+#          fromFieldPath: status.atProvider.status
+#          toFieldPath: status.controlPlaneStatus
+#        - type: ToCompositeFieldPath
+#          fromFieldPath: spec.writeConnectionSecretToRef.namespace
+#          toFieldPath: spec.writeConnectionSecretToRef.namespace
+
+    - name: eks-clusterAuth
+      base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: ClusterAuth
+        spec:
+          forProvider:
+            region: eu-west-2
+            clusterNameRef:
+              name: eks-cluster
+          writeConnectionSecretToRef:
+            name: cluster-conn
+            namespace: crossplane-system
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.clusterNameRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-conn"
+

@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-claims
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: k8s-teams
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: claims
+    repoURL: 'https://github.com/jaruizes/platform-argo-crossplane-claims.git'
+    targetRevision: HEAD
+    directory:
+      recurse: true
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
