@@ -14,9 +14,6 @@ In this PoC you will learn how to manage cloud infrastructure by using Kubernete
 - [Eksctl](https://eksctl.io/)
 - Kubectl
 - Helm
-- A Github token to access to claims repository
-
-(*) If you don't have a Kubernetes instance, you can trry [K3d](https://k3d.io/v5.5.1/#quick-start) or execute the script "create-cluster.sh" to create a cluster in AWS (there is another script "delete-cluster.sh" to delete it.)
 
 
 
@@ -59,7 +56,7 @@ sh create-cluster.sh
 Once the main cluster is up and running, we have to install and configure [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) and [Crossplane](https://www.crossplane.io/). To do this, just execute the following script:
 
 ```bash
-sh setup.sh <AWS_ACCESS_KEY_ID> <AWS_SECRET_ACCESS_KEY> <GITHUB_TOKEN>
+sh setup.sh <AWS_ACCESS_KEY_ID> <AWS_SECRET_ACCESS_KEY>
 ```
 
 
@@ -73,30 +70,28 @@ ARGOCD Credentials: admin/FkmHYXTwAWT33eFZ
 
 
 
-If we go to this URL we'll enter to ArgoCD and we have to check that two applications are created:
+If we go to this URL we'll enter to ArgoCD and we'll see that there are two applications created:
 
-![argocd_init_screen](pictures/argocd_init_screen.jpg)
+![argocd_init_screen](doc/pictures/argocd_apps.jpg)
 
+Why those two applications?
 
+#### ArgoCD App: crossplane-resources
 
-### Deploying composite objects
+This app is listening for changes in "https://github.com/jaruizes/platform-argo-crossplane/crossplane/resources" . So, if we add more crossplane composites or update what exists, ArgoCD applies those changes to the main kubernetes cluster. 
 
-Now, it's time to define how a k8s cluster is going to be created. We need to do these tasks:
+If you click in this app, you can see that two objects are managed by ArgoCD:
 
-- Defining a composition object for an EKS cluster (*crossplane/composite/eks-composition.yaml*)
-- Creating a definition object and claim to request an EKS cluster  (*crossplane/composite/eks-definition.yaml*)
+![crossplane_initial_composite](doc/pictures/crossplane_initial_composite.jpg)
 
+Those objects are:
 
-
-To install these objects, execute this command:
-
-```shell
-sh deploy-composite.sh
-```
+- EKS Composition, defined in "*crossplane/resources/aws/composite/eks/eks-composition.yaml*"
+- EKS Composite Resource Definition, defined in "*crossplane/resources/aws/composite/eks/eks-definition.yaml*"
 
 
 
-If we execute this command:
+So, ArgoCD has installed those objects in the cluster and keeps them synchronized with the repository. We can check it executing this command:
 
 ```bash
 kubectl get Composition -n crossplane-system
@@ -104,7 +99,7 @@ kubectl get Composition -n crossplane-system
 
 
 
-we'll see our composition installed:
+We'll see the composition installed:
 
 ```bash
 NAME               XR-KIND            XR-APIVERSION             AGE
@@ -121,7 +116,7 @@ kubectl get CompositeResourceDefinition
 
 
 
-we'll see our composite definition installed:
+we'll see the composite definition installed:
 
 ```bash
 NAME                                     ESTABLISHED   OFFERED   AGE
@@ -130,30 +125,44 @@ customk8sclusters.jaruiz.crossplane.io   True          True      9m3s
 
 
 
-### Claim an EKS
 
-Finally, we are going to request to create a new EKS cluster called "k8s-team-x". We have to push a new file to the [claims repository](https://github.com/jaruizes/platform-argo-crossplane-claims) , in the folder "claims/", in order to ArgoCD gets the change and applies for the cluster object to Crossplane. The claim file has the following structure:
+
+#### ArgoCD App: **teams-claims**
+
+This application is listening for changes in "https://github.com/jaruizes/platform-argo-crossplane/teams" . So, a team wants to get a K8s cluster, the team will push a file containing the K8s claim in that path, ArgoCD will apply that change to the main kubernetes cluster and Crossplain will create the new cluster
+
+If we click to see the details of the app, we'll see that there is no objects there. That is because we haven't requested any claim (that means that we haven't performed any push to "https://github.com/jaruizes/platform-argo-crossplane/teams")
+
+![argocd_inital_teams_claims](doc/pictures/argocd_inital_teams_claims.jpg)
+
+
+
+### Claiming an EKS
+
+Now it's the moment to create a claim. We are going to request to create a new EKS cluster called "k8s-team-x". We have to push a new file to "https://github.com/jaruizes/platform-argo-crossplane/teams".
+
+The claim file has the following structure (there is an example in "*crossplane/claim-example/k8s-claim.yaml*":
 
 ```yaml
 apiVersion: jaruiz.crossplane.io/v1
 kind: customk8sclusterclaim
 metadata:
-  name: k8s-team-a
+  name: k8s-team-x
   labels:
-    cluster-owner: team-a
+    cluster-owner: team-x
 spec:
-  name: k8s-team-a
+  name: k8s-team-x
 ```
 
-There is an example file in "claims-example/k8s-claim.yaml". The following picture shows how to do it:
 
 
+So, we create a new file called, for instance, "team-x-eks-claim.yaml", with that content, and push it to the repository:
 
-![push-claim](pictures/push-claim.jpg)
+![eks-claim-team-x](doc/pictures/eks-claim-team-x.jpg)
 
-Now, if we go to ArgoCD and we open the application we created before, we'll see how all the components associated to the composition are being created:
+Now, if we go to ArgoCD and we open the application "**teams-claims**", we'll see how all the components associated to the composition are being created:
 
-![argocd_cluster_created](pictures/argocd_cluster_created.jpg)
+![argocd_cluster_created](doc/pictures/argocd_cluster_created.jpg)
 
 
 
@@ -174,7 +183,7 @@ k8s-team-x-cluster   True    True     k8s-team-x-cluster   9m59s
 
 
 
-And, if can check the secret containing the connection details:
+And, once the cluster is created, we can check the secret containing the connection details:
 
 ```bash
 kubectl describe secret k8s-team-x-conn  -n crossplane-system
@@ -213,9 +222,13 @@ We have to perform two tasks:
 
 ### Removing the claim
 
-If we delete the file from the repository, the environment will be deleted by ArgoCD:
+If we delete the file from the repository and we push the change:
 
-![argocd_delete_claim](pictures/argocd_delete_claim.jpg)
+![deleted_claim_team-x](doc/pictures/deleted_claim_team-x.jpg)
+
+the cluster for the team X will be deleted by ArgoCD:
+
+![argocd_delete_claim](doc/pictures/argocd_delete_claim.jpg)
 
 We can also check it using kubectl:
 
@@ -236,7 +249,7 @@ And, if we execute the command some minutes later, we'll see that the resource i
 
 We also can check AWS Console:
 
-![cluster_deleting_aws](pictures/cluster_deleting_aws.jpg)
+![cluster_deleting_aws](doc/pictures/cluster_deleting_aws.jpg)
 
 
 

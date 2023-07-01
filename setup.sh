@@ -3,7 +3,6 @@ set -e
 
 AWS_ACCESS_KEY_ID=$1
 AWS_SECRET_ACCESS_KEY=$2
-GITHUB_TOKEN=$3
 
 installArgoCD() {
   kubectl create namespace argocd
@@ -25,13 +24,12 @@ installAWSProvider() {
 }
 
 createSecretAWSCredentials() {
-  echo "[default]
+  CREDS="[default]
   aws_access_key_id = $AWS_ACCESS_KEY_ID
   aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
-  " >aws-creds.conf
+  "
 
-  kubectl create secret generic aws-secret -n crossplane-system --from-file creds=./aws-creds.conf
-  rm aws-creds.conf
+  kubectl create secret generic aws-secret -n crossplane-system --from-literal creds="$CREDS"
 }
 
 configAWSProviderToUseAWSCredentials() {
