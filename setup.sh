@@ -9,6 +9,7 @@ installArgoCD() {
   kubectl create namespace argocd
   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
   kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+  kubectl patch configmap/argocd-cm -n argocd --type merge -p '{"data":{"application.resourceTrackingMethod": "annotation"}}'
 }
 
 installCrossplane() {
@@ -37,10 +38,6 @@ configAWSProviderToUseAWSCredentials() {
   kubectl apply -f crossplane/providers/aws-provider-config.yaml -n crossplane-system
 }
 
-configCrossplaneAndArgoCD() {
-  kubectl patch configmap/argocd-cm -n argocd --type merge -p '{"data":{"application.resourceTrackingMethod": "annotation"}}'
-}
-
 configureArgoCDApps() {
   kubectl apply -f crossplane/argocd/crossplane-resources-app -n argocd
   kubectl apply -f crossplane/argocd/claims-app -n argocd
@@ -55,7 +52,6 @@ setupCrossplane() {
   installAWSProvider
   createSecretAWSCredentials
   configAWSProviderToUseAWSCredentials
-  configCrossplaneAndArgoCD
 }
 
 showInfo() {
@@ -75,9 +71,9 @@ showInfo() {
 }
 
 setup() {
-#  createTeamsNamespace
-#  installArgoCD
-#  setupCrossplane
+  createTeamsNamespace
+  installArgoCD
+  setupCrossplane
   configureArgoCDApps
   showInfo
 }

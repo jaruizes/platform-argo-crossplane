@@ -9,9 +9,9 @@ spec:
     namespace: teams
     server: 'https://kubernetes.default.svc'
   source:
-    path: claims
-    repoURL: 'https://github.com/jaruizes/platform-argo-crossplane-claims.git'
+    repoURL: 'https://github.com/jaruizes/platform-argo-crossplane.git'
     targetRevision: HEAD
+    path: teams/claims
     directory:
       recurse: true
   sources: []

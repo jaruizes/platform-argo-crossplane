@@ -7,4 +7,4 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 stringData:
   type: git
-  url: https://github.com/jaruizes/platform-argo-crossplane-claims.git
+  url: https://github.com/jaruizes/platform-argo-crossplane.git
