@@ -20,6 +20,14 @@ In this PoC you will learn how to manage cloud infrastructure by using Kubernete
 
 
 
+## Repository structure
+
+This image shows the repository structure:
+
+![repo_structure](doc/pictures/repo_structure.jpg)
+
+
+
 ## Setting everything up
 
 This image shows how the PoC works:
@@ -30,13 +38,13 @@ This image shows how the PoC works:
 
 ### Creating an initial Kubernetes cluster
 
-So, the first step is to create an initial Kubernetes cluster in order to install Crossplane and ArgoCD. 
+So, the first step is to create an initial Kubernetes cluster in order to install Crossplane and ArgoCD.
 
 ![Diagram showing a user communicating to Kubernetes. Crossplane connected to Kubernetes and Crossplane communicating with AWS, Azure and GCP](https://docs.crossplane.io/content/media/crossplane-intro-diagram_hud9dc847ee0e2ab0b53319b680d79d1fd_55780_828x273_resize_q75_h2_box_3.webp)
 
 
 
-In this case, we are going to create an EKS cluster using [eksctl](https://eksctl.io/) and the cluster configuration is in the file *cluster-conf.yaml*. 
+In this case, we are going to create an EKS cluster using [eksctl](https://eksctl.io/) and the cluster configuration is in the file *cluster-conf.yaml*.
 
 The following script encapsulates the cluster creation:
 
@@ -65,9 +73,9 @@ ARGOCD Credentials: admin/FkmHYXTwAWT33eFZ
 
 
 
-If we go to this URL we'll enter to ArgoCD and we have to check that the claims application is created:
+If we go to this URL we'll enter to ArgoCD and we have to check that two applications are created:
 
-![argocd_init_screen](doc/pictures/argocd_init_screen.jpg)
+![argocd_init_screen](pictures/argocd_init_screen.jpg)
 
 
 
@@ -141,11 +149,11 @@ There is an example file in "claims-example/k8s-claim.yaml". The following pictu
 
 
 
-![push-claim](doc/pictures/push-claim.jpg)
+![push-claim](pictures/push-claim.jpg)
 
 Now, if we go to ArgoCD and we open the application we created before, we'll see how all the components associated to the composition are being created:
 
-![argocd_cluster_created](doc/pictures/argocd_cluster_created.jpg)
+![argocd_cluster_created](pictures/argocd_cluster_created.jpg)
 
 
 
@@ -207,7 +215,7 @@ We have to perform two tasks:
 
 If we delete the file from the repository, the environment will be deleted by ArgoCD:
 
-![argocd_delete_claim](doc/pictures/argocd_delete_claim.jpg)
+![argocd_delete_claim](pictures/argocd_delete_claim.jpg)
 
 We can also check it using kubectl:
 
@@ -228,7 +236,7 @@ And, if we execute the command some minutes later, we'll see that the resource i
 
 We also can check AWS Console:
 
-![cluster_deleting_aws](doc/pictures/cluster_deleting_aws.jpg)
+![cluster_deleting_aws](pictures/cluster_deleting_aws.jpg)
 
 
 
