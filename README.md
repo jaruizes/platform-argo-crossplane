@@ -24,7 +24,7 @@ In this PoC you will learn how to manage cloud infrastructure by using Kubernete
 
 This image shows how the PoC works:
 
-![workflow](pictures/workflow.jpg)
+![workflow](doc/pictures/workflow.jpg)
 
 
 
@@ -67,7 +67,7 @@ ARGOCD Credentials: admin/FkmHYXTwAWT33eFZ
 
 If we go to this URL we'll enter to ArgoCD and we have to check that the claims application is created:
 
-![argocd_init_screen](pictures/argocd_init_screen.jpg)
+![argocd_init_screen](doc/pictures/argocd_init_screen.jpg)
 
 
 
@@ -141,11 +141,11 @@ There is an example file in "claims-example/k8s-claim.yaml". The following pictu
 
 
 
-![push-claim](pictures/push-claim.jpg)
+![push-claim](doc/pictures/push-claim.jpg)
 
 Now, if we go to ArgoCD and we open the application we created before, we'll see how all the components associated to the composition are being created:
 
-![argocd_cluster_created](pictures/argocd_cluster_created.jpg)
+![argocd_cluster_created](doc/pictures/argocd_cluster_created.jpg)
 
 
 
@@ -207,7 +207,7 @@ We have to perform two tasks:
 
 If we delete the file from the repository, the environment will be deleted by ArgoCD:
 
-![argocd_delete_claim](pictures/argocd_delete_claim.jpg)
+![argocd_delete_claim](doc/pictures/argocd_delete_claim.jpg)
 
 We can also check it using kubectl:
 
@@ -228,7 +228,7 @@ And, if we execute the command some minutes later, we'll see that the resource i
 
 We also can check AWS Console:
 
-![cluster_deleting_aws](pictures/cluster_deleting_aws.jpg)
+![cluster_deleting_aws](doc/pictures/cluster_deleting_aws.jpg)
 
 
 
