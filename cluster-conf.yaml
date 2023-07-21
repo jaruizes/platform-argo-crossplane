@@ -3,7 +3,7 @@ kind: ClusterConfig
 
 metadata:
   name: crossplane-poc-cluster
-  region: eu-west-2
+  region: eu-west-3
 
 nodeGroups:
   - name: ng-1
