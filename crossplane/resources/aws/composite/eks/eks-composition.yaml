@@ -89,7 +89,7 @@ spec:
           forProvider:
             region: eu-west-3
             mapPublicIpOnLaunch: true
-            availabilityZone: eu-west-2b
+            availabilityZone: eu-west-3b
             vpcIdRef:
               name: sample-vpc
             cidrBlock: 172.16.10.0/24
@@ -115,7 +115,7 @@ spec:
           forProvider:
             region: eu-west-3
             mapPublicIpOnLaunch: true
-            availabilityZone: eu-west-2c
+            availabilityZone: eu-west-3c
             vpcIdRef:
               name: sample-vpc
             cidrBlock: 172.16.11.0/24
@@ -140,7 +140,7 @@ spec:
         spec:
           forProvider:
             region: eu-west-3
-            availabilityZone: eu-west-2b
+            availabilityZone: eu-west-3b
             vpcIdRef:
               name: sample-vpc
             cidrBlock: 172.16.12.0/24
