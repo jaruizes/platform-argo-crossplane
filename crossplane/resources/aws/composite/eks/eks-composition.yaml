@@ -71,7 +71,7 @@ spec:
         spec:
           forProvider:
             enableDnsHostnames: true
-            region: eu-west-2
+            region: eu-west-3
             cidrBlock: 172.16.0.0/16
       patches:
         - fromFieldPath: spec.name
@@ -87,7 +87,7 @@ spec:
         kind: Subnet
         spec:
           forProvider:
-            region: eu-west-2
+            region: eu-west-3
             mapPublicIpOnLaunch: true
             availabilityZone: eu-west-2b
             vpcIdRef:
@@ -113,7 +113,7 @@ spec:
         kind: Subnet
         spec:
           forProvider:
-            region: eu-west-2
+            region: eu-west-3
             mapPublicIpOnLaunch: true
             availabilityZone: eu-west-2c
             vpcIdRef:
@@ -139,7 +139,7 @@ spec:
         kind: Subnet
         spec:
           forProvider:
-            region: eu-west-2
+            region: eu-west-3
             availabilityZone: eu-west-2b
             vpcIdRef:
               name: sample-vpc
@@ -167,7 +167,7 @@ spec:
             meta.upbound.io/example-id: eks/v1beta1/cluster
         spec:
           forProvider:
-            region: eu-west-2
+            region: eu-west-3
             vpcIdRef:
               name: sample-vpc
       patches:
@@ -190,7 +190,7 @@ spec:
         kind: RouteTableAssociation
         spec:
           forProvider:
-            region: eu-west-2
+            region: eu-west-3
             routeTableIdRef:
               name: example
             subnetIdRef:
@@ -220,7 +220,7 @@ spec:
         kind: InternetGateway
         spec:
           forProvider:
-            region: eu-west-2
+            region: eu-west-3
             vpcIdRef:
               name: sample-vpc
       patches:
@@ -245,7 +245,7 @@ spec:
           forProvider:
             defaultRouteTableIdRef:
               name: sample-vpc
-            region: eu-west-2
+            region: eu-west-3
             route:
               - gatewayIdRef:
                   name: example
@@ -276,7 +276,7 @@ spec:
         kind: Cluster
         spec:
           forProvider:
-            region: eu-west-2
+            region: eu-west-3
             roleArnRef:
               name: teama-cluster-role
             vpcConfig:
@@ -324,7 +324,7 @@ spec:
         kind: ClusterAuth
         spec:
           forProvider:
-            region: eu-west-2
+            region: eu-west-3
             clusterNameRef:
               name: eks-cluster
           writeConnectionSecretToRef:
