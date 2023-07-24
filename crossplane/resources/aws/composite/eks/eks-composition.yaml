@@ -318,6 +318,55 @@ spec:
 #          fromFieldPath: spec.writeConnectionSecretToRef.namespace
 #          toFieldPath: spec.writeConnectionSecretToRef.namespace
 
+    - name: eks-nodeGroup
+      base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: NodeGroup
+        spec:
+          forProvider:
+            clusterNameRef:
+              name: sample-eks-cluster
+            nodeRoleArnRef:
+              name: sample-node-role
+            region: us-west-1
+            scalingConfig:
+              - desiredSize: 2
+                maxSize: 2
+                minSize: 1
+            subnetIdRefs:
+              - name: sample-subnet1
+              - name: sample-subnet2
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.clusterNameRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleArnRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster-role"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRefs[0].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRefs[1].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet2"
     - name: eks-clusterAuth
       base:
         apiVersion: eks.aws.upbound.io/v1beta1
