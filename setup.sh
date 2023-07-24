@@ -20,7 +20,7 @@ installCrossplane() {
 
 installAWSProvider() {
   kubectl apply -f crossplane/providers/aws-provider.yaml -n crossplane-system
-  sleep 60
+  sleep 90
 }
 
 createSecretAWSCredentials() {
