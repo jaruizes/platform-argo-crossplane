@@ -117,7 +117,8 @@ spec:
             region: eu-west-3
             securityGroupIdRef:
               name: example
-            self: true
+            cidrBlocks:
+              - 0.0.0.0/0
             toPort: 0
             type: ingress
       patches:
@@ -333,6 +334,8 @@ spec:
             roleArnRef:
               name: teama-cluster-role
             vpcConfig:
+              - securityGroupIdRefs:
+                  - name: sg
               - subnetIdRefs:
                   - name: k8s-team-a-subnet1
                   - name: k8s-team-a-subnet2
@@ -361,6 +364,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-subnet2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcConfig[0].securityGroupIdRefs[0].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
       readinessChecks:
         - type: MatchString
           fieldPath: status.atProvider.status
