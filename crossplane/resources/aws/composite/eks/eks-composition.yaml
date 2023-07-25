@@ -105,7 +105,7 @@ spec:
               string:
                 fmt: "%s-vpc"
 
-    - name: eks-sg-rule
+    - name: eks-sg-rule-1
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
         kind: SecurityGroupRule
@@ -127,13 +127,44 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-sg-rule"
+                fmt: "%s-sg-rule-1"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.securityGroupIdRef.name
           transforms:
             - type: string
               string:
                 fmt: "%s-sg"
+
+    - name: eks-sg-rule-2
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: SecurityGroupRule
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            fromPort: 0
+            protocol: "-1"
+            region: eu-west-3
+            securityGroupIdRef:
+              name: example
+            self: true
+            toPort: 0
+            type: ingress
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg-rule-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.securityGroupIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+
+
 
     - name: eks-subnet1
       base:
