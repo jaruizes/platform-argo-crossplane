@@ -415,6 +415,8 @@ spec:
         spec:
           deletionPolicy: Delete
           forProvider:
+            tags:
+              name: eks-sg
             region: eu-west-3
             vpcIdRef:
               name: sample-vpc
@@ -459,14 +461,14 @@ spec:
             - type: string
               string:
                 fmt: "%s-sg"
-
-    ### GATEWAY
     - name: eks-internetGateway
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
         kind: InternetGateway
         spec:
           forProvider:
+            tags:
+              name: eks-ig
             region: eu-west-3
             vpcIdRef:
               name: sample-vpc
@@ -489,6 +491,8 @@ spec:
         kind: RouteTable
         spec:
           forProvider:
+            tags:
+              name: eks-rt
             region: eu-west-3
             vpcIdRef:
               name: sample-vpc
@@ -505,7 +509,6 @@ spec:
             - type: string
               string:
                 fmt: "%s-vpc"
-
     - name: eks-route-1
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
