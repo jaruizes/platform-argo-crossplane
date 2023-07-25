@@ -302,7 +302,7 @@ spec:
               string:
                 fmt: "%s-private-subnet-2"
         - fromFieldPath: spec.name
-          toFieldPath: spec.forProvider.subnetIdRefs[1].name
+          toFieldPath: spec.forProvider.subnetIdRefs[2].name
           transforms:
             - type: string
               string:
@@ -460,7 +460,176 @@ spec:
               string:
                 fmt: "%s-sg"
 
+    ### GATEWAY
+    - name: eks-internetGateway
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: InternetGateway
+        spec:
+          forProvider:
+            region: eu-west-3
+            vpcIdRef:
+              name: sample-vpc
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-ig"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+    - name: eks-routeTable
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTable
+        spec:
+          forProvider:
+            region: eu-west-3
+            vpcIdRef:
+              name: sample-vpc
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
 
+    - name: eks-route-1
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Route
+        spec:
+          forProvider:
+            destinationCidrBlock: 0.0.0.0/0
+            gatewayIdRef:
+              name: routegw
+            region: eu-west-3
+            routeTableIdRef:
+              name: table
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.gatewayIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-ig"
+
+    - name: eks-routetable-association-1
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTableAssociation
+        spec:
+          forProvider:
+            region: eu-west-3
+            routeTableIdRef:
+              name: rta
+            subnetIdRef:
+              name: rta
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable-association-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-private-subnet-1"
+
+    - name: eks-routetable-association-2
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTableAssociation
+        spec:
+          forProvider:
+            region: eu-west-3
+            routeTableIdRef:
+              name: rta
+            subnetIdRef:
+              name: rta
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable-association-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-private-subnet-2"
+
+    - name: eks-routetable-association-3
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTableAssociation
+        spec:
+          forProvider:
+            region: eu-west-3
+            routeTableIdRef:
+              name: rta
+            subnetIdRef:
+              name: rta
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable-association-3"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-private-subnet-3"
 
 
 
