@@ -318,6 +318,100 @@ spec:
 #          fromFieldPath: spec.writeConnectionSecretToRef.namespace
 #          toFieldPath: spec.writeConnectionSecretToRef.namespace
 
+    - name: nodegroup-role
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Role
+        spec:
+          forProvider:
+            assumeRolePolicy: |
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "ec2.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              }
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
+
+    - name: nodegroup-policy-attachment1
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+            roleRef:
+              name: sample-node-role
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-policy-attachment1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
+
+    - name: nodegroup-policy-attachment2
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+            roleRef:
+              name: sample-node-role
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-policy-attachment2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
+    - name: nodegroup-policy-attachment3
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+            roleRef:
+              name: sample-node-role
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-policy-attachment3"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
     - name: eks-nodeGroup
       base:
         apiVersion: eks.aws.upbound.io/v1beta1
@@ -354,7 +448,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-cluster-role"
+                fmt: "%s-nodegroup-role"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.subnetIdRefs[0].name
           transforms:
