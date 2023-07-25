@@ -318,7 +318,7 @@ spec:
               string:
                 fmt: "%s-vpc"
         - fromFieldPath: spec.name
-          toFieldPath: spec.forProvider.route.gatewayIdRef.name
+          toFieldPath: spec.forProvider.route.gatewayIdRef[0].name
           transforms:
             - type: string
               string:
@@ -336,7 +336,7 @@ spec:
             vpcConfig:
               - securityGroupIdRefs:
                   - name: sg
-              - subnetIdRefs:
+                subnetIdRefs:
                   - name: k8s-team-a-subnet1
                   - name: k8s-team-a-subnet2
       patches:
