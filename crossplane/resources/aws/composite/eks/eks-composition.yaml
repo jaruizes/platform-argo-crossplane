@@ -128,7 +128,7 @@ spec:
               string:
                 fmt: "%s-sg-rule"
         - fromFieldPath: spec.name
-          toFieldPath: spec.securityGroupIdRef.name
+          toFieldPath: spec.forProvider.securityGroupIdRef.name
           transforms:
             - type: string
               string:
