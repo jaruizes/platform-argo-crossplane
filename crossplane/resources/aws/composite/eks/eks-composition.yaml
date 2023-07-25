@@ -81,6 +81,59 @@ spec:
               string:
                 fmt: "%s-vpc"
 
+    - name: eks-sg
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: SecurityGroup
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            region: eu-west-3
+            vpcIdRef:
+              name: sample-vpc
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+
+    - name: eks-sg-rule
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: SecurityGroupRule
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            fromPort: 0
+            protocol: -1
+            region: eu-west-3
+            securityGroupIdRef:
+              name: example
+            self: true
+            toPort: 0
+            type: ingress
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg-rule"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.securityGroupIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+
     - name: eks-subnet1
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
@@ -308,6 +361,10 @@ spec:
             - type: string
               string:
                 fmt: "%s-subnet2"
+      readinessChecks:
+        - type: MatchString
+          fieldPath: status.atProvider.status
+          matchString: ACTIVE
 #        - type: ToCompositeFieldPath
 #          fromFieldPath: metadata.name
 #          toFieldPath: status.clusterName
@@ -423,6 +480,8 @@ spec:
             nodeRoleArnRef:
               name: sample-node-role
             region: eu-west-3
+            instanceTypes:
+              - m5.large
             scalingConfig:
               - desiredSize: 2
                 maxSize: 2
@@ -461,6 +520,10 @@ spec:
             - type: string
               string:
                 fmt: "%s-subnet2"
+      readinessChecks:
+        - type: MatchString
+          fieldPath: status.atProvider.status
+          matchString: ACTIVE
     - name: eks-clusterAuth
       base:
         apiVersion: eks.aws.upbound.io/v1beta1
