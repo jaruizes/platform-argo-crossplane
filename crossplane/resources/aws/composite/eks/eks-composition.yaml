@@ -113,7 +113,7 @@ spec:
           deletionPolicy: Delete
           forProvider:
             fromPort: 0
-            protocol: -1
+            protocol: "-1"
             region: eu-west-3
             securityGroupIdRef:
               name: example
