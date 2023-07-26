@@ -630,6 +630,83 @@ spec:
             - type: string
               string:
                 fmt: "%s-public-subnet-3"
+    - name: eks-helmProviderConfig
+      base:
+        apiVersion: helm.crossplane.io/v1beta1
+        kind: ProviderConfig
+        spec:
+          credentials:
+            secretRef:
+              key: kubeconfig
+              name: cluster-config
+              namespace: crossplane-system
+            source: Secret
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-helm-provider"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.credentials.secretRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-conn"
+      readinessChecks:
+        - type: None
+    - name: eks-k8sProviderConfig
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: ProviderConfig
+        spec:
+          credentials:
+            secretRef:
+              key: kubeconfig
+              name: cluster-config
+              namespace: crossplane-system
+            source: Secret
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-k8s-provider"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.credentials.secretRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-conn"
+      readinessChecks:
+        - type: None
+    - name: eks-argocd-install
+      base:
+        apiVersion: helm.crossplane.io/v1beta1
+        kind: Release
+        metadata:
+          name: argocd-patched
+        spec:
+          forProvider:
+            chart:
+              name: argo-cd
+              repository: https://argoproj.github.io/argo-helm
+              version: 5.35.0
+            namespace: argocd
+            set:
+              - name: server.service.type
+                value: LoadBalancer
+          providerRef:
+            name: provider-helm
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: spec.providerRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-helm-provider"
 
 
 
