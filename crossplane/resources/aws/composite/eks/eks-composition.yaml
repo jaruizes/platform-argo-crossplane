@@ -843,9 +843,15 @@ spec:
             set:
               - name: server.service.type
                 value: LoadBalancer
-          providerRef:
+          providerConfigRef:
             name: provider-helm
       patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-argo-helm-release"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerRef.name
           transforms:
