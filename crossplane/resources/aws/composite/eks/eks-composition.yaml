@@ -647,7 +647,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-k8s-provider"
+                fmt: "%s-k8s-provider-config"
         - fromFieldPath: spec.name
           toFieldPath: spec.credentials.secretRef.name
           transforms:
@@ -667,6 +667,8 @@ spec:
               kind: Namespace
               metadata:
                 name: argocd
+          providerConfigRef:
+            name: kubernetes-provider
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
@@ -674,6 +676,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-ns-argocd"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-k8s-provider-config"
     - name: k8s-provider-sa
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
@@ -686,6 +694,8 @@ spec:
               metadata:
                 name: provider-kubernetes
                 namespace: crossplane-system
+          providerConfigRef:
+            name: kubernetes-provider
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
@@ -693,8 +703,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-k8s-provider-sa"
-        - fromFieldPath: spec.id
+        - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-k8s-provider-config"
     - name: k8s-provider-crd
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
@@ -714,6 +728,8 @@ spec:
                 kind: ClusterRole
                 name: cluster-admin
                 apiGroup: rbac.authorization.k8s.io
+          providerConfigRef:
+            name: kubernetes-provider
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
@@ -721,8 +737,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-k8s-provider-crb"
-        - fromFieldPath: spec.id
+        - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-k8s-provider-config"
     - name: k8s-provider-cc
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
@@ -736,6 +756,8 @@ spec:
                 name: provider-kubernetes
               spec:
                 serviceAccountName: provider-kubernetes
+          providerConfigRef:
+            name: kubernetes-provider
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
@@ -743,8 +765,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-k8s-provider-cc"
-        - fromFieldPath: spec.id
+        - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-k8s-provider-config"
     - name: k8s-provider
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
@@ -760,6 +786,8 @@ spec:
                 package: crossplane/provider-kubernetes:main
                 controllerConfigRef:
                   name: provider-kubernetes
+          providerConfigRef:
+            name: kubernetes-provider
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
@@ -767,8 +795,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-k8s-provider"
-        - fromFieldPath: spec.id
+        - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-k8s-provider-config"
     - name: eks-helmProviderConfig
       base:
         apiVersion: helm.crossplane.io/v1beta1
