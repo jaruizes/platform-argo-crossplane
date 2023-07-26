@@ -65,12 +65,6 @@ spec:
             - type: string
               string:
                 fmt: "%s-private-subnet-3"
-#        - fromFieldPath: spec.name
-#          toFieldPath: spec.forProvider.vpcConfig[0].securityGroupIdRefs[0].name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-sg"
       readinessChecks:
         - type: MatchString
           fieldPath: status.atProvider.status
@@ -174,13 +168,14 @@ spec:
                 fmt: "%s-vpc"
 
     ### PRIVATE SUBNETS
-    - name: eks-private-subnet-1
+    - name: eks-public-subnet-1
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
         kind: Subnet
         spec:
           forProvider:
             region: eu-west-3
+            mapPublicIpOnLaunch: true
             availabilityZone: eu-west-3a
             vpcIdRef:
               name: sample-vpc
@@ -191,20 +186,21 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-1"
+                fmt: "%s-public-subnet-1"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.vpcIdRef.name
           transforms:
             - type: string
               string:
                 fmt: "%s-vpc"
-    - name: eks-private-subnet-2
+    - name: eks-public-subnet-2
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
         kind: Subnet
         spec:
           forProvider:
             region: eu-west-3
+            mapPublicIpOnLaunch: true
             availabilityZone: eu-west-3b
             vpcIdRef:
               name: sample-vpc
@@ -215,20 +211,21 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-2"
+                fmt: "%s-public-subnet-2"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.vpcIdRef.name
           transforms:
             - type: string
               string:
                 fmt: "%s-vpc"
-    - name: eks-private-subnet-3
+    - name: eks-public-subnet-3
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
         kind: Subnet
         spec:
           forProvider:
             region: eu-west-3
+            mapPublicIpOnLaunch: true
             availabilityZone: eu-west-3c
             vpcIdRef:
               name: sample-vpc
@@ -239,7 +236,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-3"
+                fmt: "%s-public-subnet-3"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.vpcIdRef.name
           transforms:
@@ -267,9 +264,9 @@ spec:
                 maxSize: 2
                 minSize: 1
             subnetIdRefs:
-              - name: private-subnet-1
-              - name: private-subnet-2
-              - name: private-subnet-3
+              - name: public-subnet-1
+              - name: public-subnet-2
+              - name: public-subnet-3
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
@@ -294,19 +291,19 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-1"
+                fmt: "%s-public-subnet-1"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.subnetIdRefs[1].name
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-2"
+                fmt: "%s-public-subnet-2"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.subnetIdRefs[2].name
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-3"
+                fmt: "%s-public-subnet-3"
       readinessChecks:
         - type: MatchString
           fieldPath: status.atProvider.status
@@ -540,7 +537,6 @@ spec:
             - type: string
               string:
                 fmt: "%s-ig"
-
     - name: eks-routetable-association-1
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
@@ -570,7 +566,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-1"
+                fmt: "%s-public-subnet-1"
 
     - name: eks-routetable-association-2
       base:
@@ -601,7 +597,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-2"
+                fmt: "%s-public-subnet-2"
 
     - name: eks-routetable-association-3
       base:
@@ -632,7 +628,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-private-subnet-3"
+                fmt: "%s-public-subnet-3"
 
 
 
