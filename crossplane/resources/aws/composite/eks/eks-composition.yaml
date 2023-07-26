@@ -853,7 +853,7 @@ spec:
               string:
                 fmt: "%s-argo-helm-release"
         - fromFieldPath: spec.name
-          toFieldPath: spec.providerRef.name
+          toFieldPath: spec.providerConfigRef.name
           transforms:
             - type: string
               string:
