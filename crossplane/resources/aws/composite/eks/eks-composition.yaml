@@ -437,6 +437,7 @@ spec:
         spec:
           deletionPolicy: Delete
           forProvider:
+            region: eu-west-3
             fromPort: 0
             toPort: 0
             protocol: "-1"
