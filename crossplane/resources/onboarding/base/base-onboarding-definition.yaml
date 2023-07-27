@@ -1,17 +1,17 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: base-onboarding.jaruiz.crossplane.io
+  name: baseonboarding.jaruiz.crossplane.io
 spec:
   connectionSecretKeys:
     - kubeconfig
   group: jaruiz.crossplane.io
   names:
-    kind: base-onboarding
-    plural: base-onboardings
+    kind: baseonboarding
+    plural: baseonboardings
   claimNames:
-    kind: base-onboarding-claim
-    plural: base-onboarding-claims
+    kind: baseonboardingclaim
+    plural: baseonboardingclaims
   versions:
     - name: v1
       served: true
