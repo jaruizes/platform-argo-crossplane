@@ -3,7 +3,7 @@ kind: Composition
 metadata:
   name: base-onboarding
   labels:
-    description: onboarding base
+    group: onboarding
 spec:
   patchSets:
     - name: metadata
