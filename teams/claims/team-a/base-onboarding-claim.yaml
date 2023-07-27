@@ -1,0 +1,8 @@
+apiVersion: jaruiz.crossplane.io/v1
+kind: base-onboarding-claim
+metadata:
+  name: k8s-team-a-onboarding
+  labels:
+    cluster-owner: team-a
+spec:
+  name: k8s-team-a
