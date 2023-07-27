@@ -630,266 +630,266 @@ spec:
             - type: string
               string:
                 fmt: "%s-public-subnet-3"
-    - name: eks-k8s-provider-config
-      base:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
-        kind: ProviderConfig
-        spec:
-          credentials:
-            secretRef:
-              key: kubeconfig
-              name: cluster-config
-              namespace: crossplane-system
-            source: Secret
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-config"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.credentials.secretRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-conn"
-      readinessChecks:
-        - type: None
-    - name: ns-argocd
-      base:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
-        kind: Object
-        spec:
-          forProvider:
-            manifest:
-              apiVersion: v1
-              kind: Namespace
-              metadata:
-                name: argocd
-          providerConfigRef:
-            name: kubernetes-provider
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-ns-argocd"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-config"
-    - name: k8s-provider-sa
-      base:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
-        kind: Object
-        spec:
-          forProvider:
-            manifest:
-              apiVersion: v1
-              kind: ServiceAccount
-              metadata:
-                name: provider-kubernetes
-                namespace: crossplane-system
-          providerConfigRef:
-            name: kubernetes-provider
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-sa"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-config"
-    - name: k8s-provider-crd
-      base:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
-        kind: Object
-        spec:
-          forProvider:
-            manifest:
-              apiVersion: rbac.authorization.k8s.io/v1
-              kind: ClusterRoleBinding
-              metadata:
-                name: provider-kubernetes
-              subjects:
-                - kind: ServiceAccount
-                  name: provider-kubernetes
-                  namespace: crossplane-system
-              roleRef:
-                kind: ClusterRole
-                name: cluster-admin
-                apiGroup: rbac.authorization.k8s.io
-          providerConfigRef:
-            name: kubernetes-provider
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-crb"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-config"
-    - name: k8s-provider-cc
-      base:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
-        kind: Object
-        spec:
-          forProvider:
-            manifest:
-              apiVersion: pkg.crossplane.io/v1alpha1
-              kind: ControllerConfig
-              metadata:
-                name: provider-kubernetes
-              spec:
-                serviceAccountName: provider-kubernetes
-          providerConfigRef:
-            name: kubernetes-provider
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-cc"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-config"
-    - name: k8s-provider
-      base:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
-        kind: Object
-        spec:
-          forProvider:
-            manifest:
-              apiVersion: pkg.crossplane.io/v1
-              kind: Provider
-              metadata:
-                name: provider-kubernetes
-              spec:
-                package: crossplane/provider-kubernetes:main
-                controllerConfigRef:
-                  name: provider-kubernetes
-          providerConfigRef:
-            name: kubernetes-provider
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-config"
-    - name: eks-helmProviderConfig
-      base:
-        apiVersion: helm.crossplane.io/v1beta1
-        kind: ProviderConfig
-        spec:
-          credentials:
-            secretRef:
-              key: kubeconfig
-              name: cluster-config
-              namespace: crossplane-system
-            source: Secret
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-helm-provider"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.credentials.secretRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-conn"
-      readinessChecks:
-        - type: None
-    - name: eks-argocd-install
-      base:
-        apiVersion: helm.crossplane.io/v1beta1
-        kind: Release
-        metadata:
-          name: argocd-patched
-        spec:
-          forProvider:
-            chart:
-              name: argo-cd
-              repository: https://argoproj.github.io/argo-helm
-              version: 5.35.0
-            namespace: argocd
-            set:
-              - name: server.service.type
-                value: LoadBalancer
-          providerConfigRef:
-            name: provider-helm
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-argo-helm-release"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-helm-provider"
-    - name: argocd-app
-      base:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
-        kind: Object
-        spec:
-          forProvider:
-            manifest:
-              apiVersion: v1
-              kind: Namespace
-              metadata:
-                name: argocd
-          providerConfigRef:
-            name: kubernetes-provider
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-ns-argocd"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-config"
-
-
-
-
-
-
-
-
-
+#    - name: eks-k8s-provider-config
+#      base:
+#        apiVersion: kubernetes.crossplane.io/v1alpha1
+#        kind: ProviderConfig
+#        spec:
+#          credentials:
+#            secretRef:
+#              key: kubeconfig
+#              name: cluster-config
+#              namespace: crossplane-system
+#            source: Secret
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-config"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.credentials.secretRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-conn"
+#      readinessChecks:
+#        - type: None
+#    - name: ns-argocd
+#      base:
+#        apiVersion: kubernetes.crossplane.io/v1alpha1
+#        kind: Object
+#        spec:
+#          forProvider:
+#            manifest:
+#              apiVersion: v1
+#              kind: Namespace
+#              metadata:
+#                name: argocd
+#          providerConfigRef:
+#            name: kubernetes-provider
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-ns-argocd"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-config"
+#    - name: k8s-provider-sa
+#      base:
+#        apiVersion: kubernetes.crossplane.io/v1alpha1
+#        kind: Object
+#        spec:
+#          forProvider:
+#            manifest:
+#              apiVersion: v1
+#              kind: ServiceAccount
+#              metadata:
+#                name: provider-kubernetes
+#                namespace: crossplane-system
+#          providerConfigRef:
+#            name: kubernetes-provider
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-sa"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-config"
+#    - name: k8s-provider-crd
+#      base:
+#        apiVersion: kubernetes.crossplane.io/v1alpha1
+#        kind: Object
+#        spec:
+#          forProvider:
+#            manifest:
+#              apiVersion: rbac.authorization.k8s.io/v1
+#              kind: ClusterRoleBinding
+#              metadata:
+#                name: provider-kubernetes
+#              subjects:
+#                - kind: ServiceAccount
+#                  name: provider-kubernetes
+#                  namespace: crossplane-system
+#              roleRef:
+#                kind: ClusterRole
+#                name: cluster-admin
+#                apiGroup: rbac.authorization.k8s.io
+#          providerConfigRef:
+#            name: kubernetes-provider
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-crb"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-config"
+#    - name: k8s-provider-cc
+#      base:
+#        apiVersion: kubernetes.crossplane.io/v1alpha1
+#        kind: Object
+#        spec:
+#          forProvider:
+#            manifest:
+#              apiVersion: pkg.crossplane.io/v1alpha1
+#              kind: ControllerConfig
+#              metadata:
+#                name: provider-kubernetes
+#              spec:
+#                serviceAccountName: provider-kubernetes
+#          providerConfigRef:
+#            name: kubernetes-provider
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-cc"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-config"
+#    - name: k8s-provider
+#      base:
+#        apiVersion: kubernetes.crossplane.io/v1alpha1
+#        kind: Object
+#        spec:
+#          forProvider:
+#            manifest:
+#              apiVersion: pkg.crossplane.io/v1
+#              kind: Provider
+#              metadata:
+#                name: provider-kubernetes
+#              spec:
+#                package: crossplane/provider-kubernetes:main
+#                controllerConfigRef:
+#                  name: provider-kubernetes
+#          providerConfigRef:
+#            name: kubernetes-provider
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-config"
+#    - name: eks-helmProviderConfig
+#      base:
+#        apiVersion: helm.crossplane.io/v1beta1
+#        kind: ProviderConfig
+#        spec:
+#          credentials:
+#            secretRef:
+#              key: kubeconfig
+#              name: cluster-config
+#              namespace: crossplane-system
+#            source: Secret
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-helm-provider"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.credentials.secretRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-conn"
+#      readinessChecks:
+#        - type: None
+#    - name: eks-argocd-install
+#      base:
+#        apiVersion: helm.crossplane.io/v1beta1
+#        kind: Release
+#        metadata:
+#          name: argocd-patched
+#        spec:
+#          forProvider:
+#            chart:
+#              name: argo-cd
+#              repository: https://argoproj.github.io/argo-helm
+#              version: 5.35.0
+#            namespace: argocd
+#            set:
+#              - name: server.service.type
+#                value: LoadBalancer
+#          providerConfigRef:
+#            name: provider-helm
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-argo-helm-release"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-helm-provider"
+#    - name: argocd-app
+#      base:
+#        apiVersion: kubernetes.crossplane.io/v1alpha1
+#        kind: Object
+#        spec:
+#          forProvider:
+#            manifest:
+#              apiVersion: v1
+#              kind: Namespace
+#              metadata:
+#                name: argocd
+#          providerConfigRef:
+#            name: kubernetes-provider
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-ns-argocd"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-config"
+#
+#
+#
+#
+#
+#
+#
+#
+#
