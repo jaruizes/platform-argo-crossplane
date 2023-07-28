@@ -1,0 +1,30 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: platforms.jaruiz.crossplane.io
+spec:
+  connectionSecretKeys:
+    - kubeconfig
+  group: jaruiz.crossplane.io
+  names:
+    kind: platform
+    plural: platforms
+  claimNames:
+    kind: platformclaim
+    plural: platformclaims
+  versions:
+    - name: v1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of this Cluster that other objects will use to refer to it.
+              required:
+                - name
