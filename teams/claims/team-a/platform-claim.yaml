@@ -1,0 +1,8 @@
+apiVersion: jaruiz.crossplane.io/v1
+kind: platformclaim
+metadata:
+  name: team-a-platform
+  labels:
+    cluster-owner: team-a
+spec:
+  name: k8s-team-a
