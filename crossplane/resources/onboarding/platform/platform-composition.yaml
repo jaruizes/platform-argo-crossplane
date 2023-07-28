@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: baseonboarding
+  name: platform
   labels:
     group: onboarding
 spec:
@@ -11,7 +11,7 @@ spec:
         - fromFieldPath: metadata.labels
   compositeTypeRef:
     apiVersion: jaruiz.crossplane.io/v1
-    kind: baseonboarding
+    kind: platform
   resources:
     - name: eks-k8s-provider-config
       base:
@@ -241,7 +241,7 @@ spec:
             - type: string
               string:
                 fmt: "%s-helm-provider"
-    - name: argocd-app
+    - name: argocd-ns
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
         kind: Object
@@ -267,7 +267,7 @@ spec:
             - type: string
               string:
                 fmt: "%s-k8s-provider-config"
-    - name: ns-argocd-onboarding-app
+    - name: ns-argocd-platform-app
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
         kind: Object
@@ -277,14 +277,14 @@ spec:
               apiVersion: argoproj.io/v1alpha1
               kind: Application
               metadata:
-                name: guestbook
+                name: platform
                 namespace: argocd
               spec:
                 project: default
                 source:
                   repoURL: https://github.com/jaruizes/platform-argo-crossplane.git
                   targetRevision: HEAD
-                  path: ./onboarding-app
+                  path: ./argocd/apps/managed/platform/root-app
                 destination:
                   server: https://kubernetes.default.svc
                   namespace: apps
