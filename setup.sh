@@ -3,6 +3,7 @@ set -e
 
 AWS_ACCESS_KEY_ID=$1
 AWS_SECRET_ACCESS_KEY=$2
+GITLAB_TOKEN=$3
 
 installArgoCD() {
   kubectl create namespace argocd
@@ -37,12 +38,31 @@ configAWSProviderToUseAWSCredentials() {
 }
 
 configureArgoCDApps() {
-  kubectl apply -f crossplane/argocd/crossplane-resources-app -n argocd
-  kubectl apply -f crossplane/argocd/claims-app -n argocd
+  kubectl apply -f argocd/apps/manager/crossplane-resources-app -n argocd
+  kubectl apply -f argocd/apps/manager/claims-app -n argocd
 }
 
 createTeamsNamespace() {
   kubectl create namespace teams
+}
+
+setupGitlabProvider() {
+  kubectl create secret generic gitlab-credentials -n crossplane-system --from-literal=token="$GITLAB_TOKEN"
+  kubectl apply -f crossplane/providers/gitlab-provider.yaml -n crossplane-system
+  sleep 60
+  kubectl apply -f crossplane/providers/gitlab-provider-config.yaml -n crossplane-system
+  sleep 10
+}
+
+installHelmAndK8sProviders() {
+  kubectl apply -f crossplane/providers/helm-provider.yaml -n crossplane-system
+  sleep 60
+  kubectl apply -f crossplane/providers/k8s-provider.yaml -n crossplane-system
+  sleep 30
+}
+
+configureKubectl() {
+  aws eks --region eu-west-3 update-kubeconfig --name crossplane-poc-cluster
 }
 
 setupCrossplane() {
@@ -69,10 +89,13 @@ showInfo() {
 }
 
 setup() {
+  configureKubectl
   createTeamsNamespace
   installArgoCD
   setupCrossplane
   configureArgoCDApps
+#  setupGitlabProvider
+  installHelmAndK8sProviders
   showInfo
 }
 
