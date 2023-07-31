@@ -84,3 +84,20 @@ spec:
 #            - type: string
 #              string:
 #                fmt: "%s-gitlab-provider-config"
+    - name: gitlab-project
+      base:
+        apiVersion: groups.gitlab.crossplane.io/v1alpha1
+        kind: Project
+        spec:
+          forProvider:
+            description: example project description
+            name: project-crossplane
+          providerConfigRef:
+            name: gitlab-provider
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-project"
