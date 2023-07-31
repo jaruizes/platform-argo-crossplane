@@ -86,7 +86,7 @@ spec:
 #                fmt: "%s-gitlab-provider-config"
     - name: gitlab-project
       base:
-        apiVersion: groups.gitlab.crossplane.io/v1alpha1
+        apiVersion: projects.gitlab.crossplane.io/v1alpha1
         kind: Project
         spec:
           forProvider:
