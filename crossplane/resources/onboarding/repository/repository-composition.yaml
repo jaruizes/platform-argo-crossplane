@@ -1,7 +1,6 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: repositories
   labels:
     group: onboarding
 spec:
@@ -10,94 +9,117 @@ spec:
       patches:
         - fromFieldPath: metadata.labels
   compositeTypeRef:
-    apiVersion: jaruiz.crossplane.io/v1
-    kind: repository
+    apiVersion: customplatform.jaruiz.io/v1
+    kind: InitTeam
   resources:
-#    - name: gitlab-provider-config
-#      base:
-#        apiVersion: gitlab.crossplane.io/v1beta1
-#        kind: ProviderConfig
-#        metadata:
-#          name: gitlab-provider
-#        spec:
-#          baseURL: https://git.paradigmadigital.com/
-#          credentials:
-#            secretRef:
-#              key: token
-#              name: gitlab-credentials
-#              namespace: crossplane-system
-#            source: Secret
-#      patches:
-#        - fromFieldPath: spec.name
-#          toFieldPath: metadata.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-gitlab-provider-config"
-#        - fromFieldPath: spec.name
-#          toFieldPath: spec.credentials.secretRef.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-conn"
-#      readinessChecks:
-#        - type: None
-#    - name: gitlab-group
-#      base:
-#        apiVersion: groups.gitlab.crossplane.io/v1alpha1
-#        kind: Group
-#        spec:
-#          forProvider:
-#            description: example group description
-#            name: Example Group
-#            path: example-group-path
-#          providerConfigRef:
-#            name: gitlab-provider
-#      patches:
-#        - fromFieldPath: spec.name
-#          toFieldPath: metadata.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-gitlab-group"
-#        - fromFieldPath: spec.name
-#          toFieldPath: spec.forProvider.description
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s group to manage repositories"
-#        - fromFieldPath: spec.name
-#          toFieldPath: spec.forProvider.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s group"
-#        - fromFieldPath: spec.name
-#          toFieldPath: spec.forProvider.path
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-group"
-#        - fromFieldPath: spec.name
-#          toFieldPath: spec.providerConfigRef.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-gitlab-provider-config"
-    - name: gitlab-project
+    - name: eks-k8s-provider-config
       base:
-        apiVersion: projects.gitlab.crossplane.io/v1alpha1
-        kind: Project
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: ProviderConfig
         spec:
-          forProvider:
-            description: example project description
-            name: project-crossplane
-          providerConfigRef:
-            name: gitlab-provider
+          credentials:
+            secretRef:
+              key: kubeconfig
+              name: cluster-config
+              namespace: crossplane-system
+            source: Secret
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
           transforms:
             - type: string
               string:
-                fmt: "%s-project"
+                fmt: "%s-k8s-provider-config"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.credentials.secretRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-conn"
+      readinessChecks:
+        - type: None
+    - name: team-claims-repository
+      base:
+        apiVersion: projects.gitlab.crossplane.io/v1alpha1
+        kind: Project
+        spec:
+          forProvider:
+            description: Claims repository
+            name: claims
+          providerConfigRef:
+            name: gitlab-provider
+          writeConnectionSecretToRef:
+            name: claims-repository-conn
+            namespace: crossplane-system
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-repository"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.description
+          transforms:
+            - type: string
+              string:
+                fmt: "Claims repository for team %s"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-repository-conn"
+    - name: team-claims-argocd-app
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Application
+              metadata:
+                name: platform
+                namespace: argocd
+              spec:
+                project: default
+                source:
+                  repoURL: https://gitlab.com/jalb80/teams-repo.git
+                  targetRevision: HEAD
+                destination:
+                  server: https://kubernetes.default.svc
+                  namespace: apps
+                syncPolicy:
+                  syncOptions:
+                    - CreateNamespace=true
+                  automated:
+                    prune: true
+                    selfHeal: true
+          providerConfigRef:
+            name: kubernetes-provider
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-argocd-app"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.source.repoURL
+          transforms:
+            - type: string
+              string:
+                fmt: "https://gitlab.com/jalb80/%s-claims"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.destination.namespace
+          transforms:
+            - type: string
+              string:
+                fmt: "team-%s"

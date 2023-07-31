@@ -1,17 +1,17 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: repositories.jaruiz.crossplane.io
+  name: initteams.customplatform.crossplane.io
 spec:
   connectionSecretKeys:
     - kubeconfig
-  group: jaruiz.crossplane.io
+  group: customplatform.jaruiz.io/v1
   names:
-    kind: repository
-    plural: repositories
+    kind: InitTeam
+    plural: initteams
   claimNames:
-    kind: repositoryclaim
-    plural: repositoriesclaims
+    kind: InitTeamClaim
+    plural: initteamsclaims
   versions:
     - name: v1
       served: true
@@ -23,8 +23,13 @@ spec:
             spec:
               type: object
               properties:
-                name:
-                  type: string
-                  description: Name of this Cluster that other objects will use to refer to it.
+                team:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Team name.
+                  required:
+                    - name
               required:
-                - name
+                - team
