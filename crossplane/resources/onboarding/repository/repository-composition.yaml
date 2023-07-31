@@ -78,9 +78,9 @@ spec:
             - type: string
               string:
                 fmt: "%s-group"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-gitlab-provider-config"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-gitlab-provider-config"
