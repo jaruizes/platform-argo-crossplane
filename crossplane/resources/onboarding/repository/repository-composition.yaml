@@ -13,7 +13,7 @@ spec:
     apiVersion: customplatform.jaruiz.io/v1
     kind: InitTeam
   resources:
-    - name: eks-k8s-provider-config
+    - name: main-kubernetes-provider-conf
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
         kind: ProviderConfig
@@ -22,13 +22,6 @@ spec:
         spec:
           credentials:
             source: InjectedIdentity
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: spec.credentials.secretRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-conn"
       readinessChecks:
         - type: None
     - name: team-claims-repository
