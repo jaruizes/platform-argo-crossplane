@@ -21,7 +21,7 @@ spec:
           credentials:
             source: InjectedIdentity
       patches:
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: metadata.name
           transforms:
             - type: string
@@ -43,25 +43,25 @@ spec:
             name: claims-repository-conn
             namespace: crossplane-system
       patches:
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: metadata.name
           transforms:
             - type: string
               string:
                 fmt: "%s-claims-repository"
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: spec.forProvider.description
           transforms:
             - type: string
               string:
                 fmt: "Claims repository for team %s"
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: spec.forProvider.name
           transforms:
             - type: string
               string:
                 fmt: "%s-claims"
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: spec.writeConnectionSecretToRef.name
           transforms:
             - type: string
@@ -96,25 +96,25 @@ spec:
           providerConfigRef:
             name: main-kubernetes-provider-conf
       patches:
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: metadata.name
           transforms:
             - type: string
               string:
                 fmt: "%s-claims-argocd-app"
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: spec.source.repoURL
           transforms:
             - type: string
               string:
                 fmt: "https://gitlab.com/jalb80/%s-claims"
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: spec.destination.namespace
           transforms:
             - type: string
               string:
                 fmt: "team-%s"
-        - fromFieldPath: spec.name
+        - fromFieldPath: spec.team.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
             - type: string
