@@ -42,42 +42,42 @@ spec:
 #                fmt: "%s-conn"
 #      readinessChecks:
 #        - type: None
-    - name: gitlab-group
-      base:
-        apiVersion: groups.gitlab.crossplane.io/v1alpha1
-        kind: Group
-        spec:
-          forProvider:
-            description: example group description
-            name: Example Group
-            path: example-group-path
-          providerConfigRef:
-            name: gitlab-provider
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-gitlab-group"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.forProvider.description
-          transforms:
-            - type: string
-              string:
-                fmt: "%s group to manage repositories"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.forProvider.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s group"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.forProvider.path
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-group"
+#    - name: gitlab-group
+#      base:
+#        apiVersion: groups.gitlab.crossplane.io/v1alpha1
+#        kind: Group
+#        spec:
+#          forProvider:
+#            description: example group description
+#            name: Example Group
+#            path: example-group-path
+#          providerConfigRef:
+#            name: gitlab-provider
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-gitlab-group"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.forProvider.description
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s group to manage repositories"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.forProvider.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s group"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.forProvider.path
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-group"
 #        - fromFieldPath: spec.name
 #          toFieldPath: spec.providerConfigRef.name
 #          transforms:
