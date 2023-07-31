@@ -19,11 +19,7 @@ spec:
         kind: ProviderConfig
         spec:
           credentials:
-            secretRef:
-              key: kubeconfig
-              name: cluster-config
-              namespace: crossplane-system
-            source: Secret
+            source: InjectedIdentity
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
