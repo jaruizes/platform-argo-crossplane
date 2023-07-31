@@ -49,6 +49,7 @@ spec:
         spec:
           forProvider:
             description: example group description
+            parentId: 70797846
             name: Example Group
             path: example-group-path
           providerConfigRef:
