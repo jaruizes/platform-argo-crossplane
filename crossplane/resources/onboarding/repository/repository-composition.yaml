@@ -81,6 +81,7 @@ spec:
               spec:
                 project: default
                 source:
+                  path: './'
                   targetRevision: HEAD
                 destination:
                   server: https://kubernetes.default.svc
