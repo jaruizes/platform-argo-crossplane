@@ -101,13 +101,19 @@ spec:
               string:
                 fmt: "%s-claims-argocd-app"
         - fromFieldPath: spec.team.name
-          toFieldPath: spec.source.repoURL
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
           transforms:
             - type: string
               string:
                 fmt: "https://gitlab.com/jalb80/%s-claims"
         - fromFieldPath: spec.team.name
-          toFieldPath: spec.destination.namespace
+          toFieldPath: spec.forProvider.manifest.spec.destination.namespace
           transforms:
             - type: string
               string:
