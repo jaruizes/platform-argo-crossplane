@@ -1,6 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
+  name: init-team
   labels:
     group: onboarding
 spec:
