@@ -13,35 +13,35 @@ spec:
     apiVersion: jaruiz.crossplane.io/v1
     kind: repository
   resources:
-    - name: gitlab-provider-config
-      base:
-        apiVersion: gitlab.crossplane.io/v1beta1
-        kind: ProviderConfig
-        metadata:
-          name: gitlab-provider
-        spec:
-          baseURL: https://git.paradigmadigital.com/
-          credentials:
-            secretRef:
-              key: token
-              name: gitlab-credentials
-              namespace: crossplane-system
-            source: Secret
-      patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-gitlab-provider-config"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.credentials.secretRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-conn"
-      readinessChecks:
-        - type: None
+#    - name: gitlab-provider-config
+#      base:
+#        apiVersion: gitlab.crossplane.io/v1beta1
+#        kind: ProviderConfig
+#        metadata:
+#          name: gitlab-provider
+#        spec:
+#          baseURL: https://git.paradigmadigital.com/
+#          credentials:
+#            secretRef:
+#              key: token
+#              name: gitlab-credentials
+#              namespace: crossplane-system
+#            source: Secret
+#      patches:
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-gitlab-provider-config"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.credentials.secretRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-conn"
+#      readinessChecks:
+#        - type: None
     - name: gitlab-group
       base:
         apiVersion: groups.gitlab.crossplane.io/v1alpha1
