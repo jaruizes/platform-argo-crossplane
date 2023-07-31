@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: initteams.customplatform.crossplane.io
+  name: initteams.customplatform.jaruiz.io
 spec:
   connectionSecretKeys:
     - kubeconfig
