@@ -5,7 +5,7 @@ metadata:
 spec:
   connectionSecretKeys:
     - kubeconfig
-  group: customplatform.jaruiz.io/v1
+  group: customplatform.jaruiz.io
   names:
     kind: InitTeam
     plural: initteams
