@@ -77,12 +77,10 @@ spec:
               apiVersion: argoproj.io/v1alpha1
               kind: Application
               metadata:
-                name: platform
                 namespace: argocd
               spec:
                 project: default
                 source:
-                  repoURL: https://gitlab.com/jalb80/teams-repo.git
                   targetRevision: HEAD
                 destination:
                   server: https://kubernetes.default.svc
