@@ -1,9 +1,0 @@
-apiVersion: customplatform.jaruiz.io/v1
-kind: InitTeamClaim
-metadata:
-  name: init-team-a
-  labels:
-    cluster-owner: team-a
-spec:
-  team:
-    name: a-team
