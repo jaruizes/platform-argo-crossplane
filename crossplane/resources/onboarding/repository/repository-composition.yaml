@@ -88,10 +88,10 @@ spec:
           providerConfigRef:
             name: main-kubernetes-provider-conf
           references:
-            - dependsOn:
-                apiVersion: projects.gitlab.crossplane.io/v1alpha1
-                kind: Project
-                name: bar
+#            - dependsOn:
+#                apiVersion: projects.gitlab.crossplane.io/v1alpha1
+#                kind: Project
+#                name: bar
             - patchesFrom:
                 apiVersion: v1
                 kind: Secret
@@ -106,12 +106,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-claims-argocd-repository"
-        - fromFieldPath: spec.team.name
-          toFieldPath: spec.references[0].dependsOn.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-claims-gitlab-project"
+#        - fromFieldPath: spec.team.name
+#          toFieldPath: spec.references[0].dependsOn.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-claims-gitlab-project"
         - fromFieldPath: spec.team.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
