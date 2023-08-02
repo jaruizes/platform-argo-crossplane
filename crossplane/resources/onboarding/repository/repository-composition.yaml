@@ -85,7 +85,6 @@ spec:
                   argocd.argoproj.io/secret-type: repository
               stringData:
                 type: git
-                url: https://github.com/jaruizes/platform-argo-crossplane.git
                 username: jalb80
           providerConfigRef:
             name: main-kubernetes-provider-conf
@@ -115,7 +114,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://gitlab.com/jalb80/%s-claims"
+                fmt: "https://gitlab.com/jalb80/%s-claims.git"
         - fromFieldPath: spec.team.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
@@ -167,7 +166,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://gitlab.com/jalb80/%s-claims"
+                fmt: "https://gitlab.com/jalb80/%s-claims.git"
         - fromFieldPath: spec.team.name
           toFieldPath: spec.forProvider.manifest.spec.destination.namespace
           transforms:
