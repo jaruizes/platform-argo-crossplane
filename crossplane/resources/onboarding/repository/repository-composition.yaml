@@ -29,162 +29,162 @@ spec:
                 fmt: "%s-kubernetes-provider-conf"
       readinessChecks:
         - type: None
-#    - name: team-claims-gitlab-project
-#      base:
-#        apiVersion: projects.gitlab.crossplane.io/v1alpha1
-#        kind: Project
-#        spec:
-#          forProvider:
-#            description: Claims repository
-#            name: claims
-#            initializeWithReadme: true
-#          providerConfigRef:
-#            name: gitlab-provider
-#          writeConnectionSecretToRef:
-#            name: claims-repository-conn
-#            namespace: crossplane-system
-#      patches:
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: metadata.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-claims-gitlab-project"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.forProvider.description
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "Claims repository for team %s"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.forProvider.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-claims"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.writeConnectionSecretToRef.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-claims-repository-conn"
-#    - name: team-claims-argocd-repository
-#      base:
-#        apiVersion: kubernetes.crossplane.io/v1alpha1
-#        kind: Object
-#        spec:
-#          forProvider:
-#            manifest:
-#              apiVersion: v1
-#              kind: Secret
-#              metadata:
-#                name: platform-argo-crossplane-claims.git
-#                namespace: argocd
-#                labels:
-#                  argocd.argoproj.io/secret-type: repository
-#              stringData:
-#                type: git
-#                username: jalb80
-#          providerConfigRef:
-#            name: main-kubernetes-provider-conf
-#          references:
-#            - dependsOn:
-#                apiVersion: projects.gitlab.crossplane.io/v1alpha1
-#                kind: Project
-#                name: bar
-#            - patchesFrom:
-#                apiVersion: v1
-#                kind: Secret
-#                name: gitlab-credentials
-#                namespace: crossplane-system
-#                fieldPath: data.token
-#              toFieldPath: spec.forProvider.manifest.stringData.password
-#      patches:
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: metadata.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-claims-argocd-repository"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.references[0].dependsOn.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-claims-gitlab-project"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.forProvider.manifest.metadata.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-claims-repository"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.forProvider.manifest.stringData.url
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "https://gitlab.com/jalb80/%s-claims.git"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.providerConfigRef.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-kubernetes-provider-conf"
-#    - name: team-claims-argocd-app
-#      base:
-#        apiVersion: kubernetes.crossplane.io/v1alpha1
-#        kind: Object
-#        spec:
-#          forProvider:
-#            manifest:
-#              apiVersion: argoproj.io/v1alpha1
-#              kind: Application
-#              metadata:
-#                namespace: argocd
-#              spec:
-#                project: default
-#                source:
-#                  path: './'
-#                  targetRevision: HEAD
-#                destination:
-#                  server: https://kubernetes.default.svc
-#                  namespace: apps
-#                syncPolicy:
-#                  syncOptions:
-#                    - CreateNamespace=true
-#                  automated:
-#                    prune: true
-#                    selfHeal: true
-#          providerConfigRef:
-#            name: main-kubernetes-provider-conf
-#      patches:
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: metadata.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-claims-argocd-app"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.forProvider.manifest.metadata.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-claims"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "https://gitlab.com/jalb80/%s-claims.git"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.forProvider.manifest.spec.destination.namespace
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "team-%s"
-#        - fromFieldPath: spec.team.name
-#          toFieldPath: spec.providerConfigRef.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-kubernetes-provider-conf"
+    - name: team-claims-gitlab-project
+      base:
+        apiVersion: projects.gitlab.crossplane.io/v1alpha1
+        kind: Project
+        spec:
+          forProvider:
+            description: Claims repository
+            name: claims
+            initializeWithReadme: true
+          providerConfigRef:
+            name: gitlab-provider
+          writeConnectionSecretToRef:
+            name: claims-repository-conn
+            namespace: crossplane-system
+      patches:
+        - fromFieldPath: spec.team.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-gitlab-project"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.description
+          transforms:
+            - type: string
+              string:
+                fmt: "Claims repository for team %s"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-repository-conn"
+    - name: team-claims-argocd-repository
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                name: platform-argo-crossplane-claims.git
+                namespace: argocd
+                labels:
+                  argocd.argoproj.io/secret-type: repository
+              stringData:
+                type: git
+                username: jalb80
+          providerConfigRef:
+            name: main-kubernetes-provider-conf
+          references:
+            - dependsOn:
+                apiVersion: projects.gitlab.crossplane.io/v1alpha1
+                kind: Project
+                name: bar
+            - patchesFrom:
+                apiVersion: v1
+                kind: Secret
+                name: gitlab-credentials
+                namespace: crossplane-system
+                fieldPath: data.token
+              toFieldPath: spec.forProvider.manifest.stringData.password
+      patches:
+        - fromFieldPath: spec.team.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-argocd-repository"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.references[0].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-gitlab-project"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-repository"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.manifest.stringData.url
+          transforms:
+            - type: string
+              string:
+                fmt: "https://gitlab.com/jalb80/%s-claims.git"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-kubernetes-provider-conf"
+    - name: team-claims-argocd-app
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Application
+              metadata:
+                namespace: argocd
+              spec:
+                project: default
+                source:
+                  path: './'
+                  targetRevision: HEAD
+                destination:
+                  server: https://kubernetes.default.svc
+                  namespace: apps
+                syncPolicy:
+                  syncOptions:
+                    - CreateNamespace=true
+                  automated:
+                    prune: true
+                    selfHeal: true
+          providerConfigRef:
+            name: main-kubernetes-provider-conf
+      patches:
+        - fromFieldPath: spec.team.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims-argocd-app"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-claims"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
+          transforms:
+            - type: string
+              string:
+                fmt: "https://gitlab.com/jalb80/%s-claims.git"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.manifest.spec.destination.namespace
+          transforms:
+            - type: string
+              string:
+                fmt: "team-%s"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-kubernetes-provider-conf"
