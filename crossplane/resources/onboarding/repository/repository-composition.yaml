@@ -203,4 +203,4 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-claims-argocd-repository"
+                fmt: "%s-claims-repository"
