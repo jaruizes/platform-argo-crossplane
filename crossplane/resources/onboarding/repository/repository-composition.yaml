@@ -98,7 +98,7 @@ spec:
                 name: gitlab-credentials
                 namespace: crossplane-system
                 fieldPath: data.token
-              toFieldPath: spec.forProvider.manifest.stringData.password
+              toFieldPath: stringData.password
               transforms:
                 - type: string
                   string:
