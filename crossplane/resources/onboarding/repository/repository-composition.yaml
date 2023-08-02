@@ -159,6 +159,8 @@ spec:
             name: main-kubernetes-provider-conf
           references:
             - dependsOn:
+                apiVersion: v1
+                kind: Secret
                 name: bar
       patches:
         - fromFieldPath: spec.team.name
