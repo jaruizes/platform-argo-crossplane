@@ -87,7 +87,7 @@ spec:
                 username: jalb80
           providerConfigRef:
             name: main-kubernetes-provider-conf
-          references:
+#          references:
 #            - dependsOn:
 #                apiVersion: projects.gitlab.crossplane.io/v1alpha1
 #                kind: Project
