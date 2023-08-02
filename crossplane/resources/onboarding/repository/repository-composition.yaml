@@ -29,45 +29,45 @@ spec:
                 fmt: "%s-kubernetes-provider-conf"
       readinessChecks:
         - type: None
-    - name: team-claims-gitlab-project
-      base:
-        apiVersion: projects.gitlab.crossplane.io/v1alpha1
-        kind: Project
-        spec:
-          forProvider:
-            description: Claims repository
-            name: claims
-            initializeWithReadme: true
-          providerConfigRef:
-            name: gitlab-provider
-          writeConnectionSecretToRef:
-            name: claims-repository-conn
-            namespace: crossplane-system
-      patches:
-        - fromFieldPath: spec.team.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-claims-gitlab-project"
-        - fromFieldPath: spec.team.name
-          toFieldPath: spec.forProvider.description
-          transforms:
-            - type: string
-              string:
-                fmt: "Claims repository for team %s"
-        - fromFieldPath: spec.team.name
-          toFieldPath: spec.forProvider.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-claims"
-        - fromFieldPath: spec.team.name
-          toFieldPath: spec.writeConnectionSecretToRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-claims-repository-conn"
+#    - name: team-claims-gitlab-project
+#      base:
+#        apiVersion: projects.gitlab.crossplane.io/v1alpha1
+#        kind: Project
+#        spec:
+#          forProvider:
+#            description: Claims repository
+#            name: claims
+#            initializeWithReadme: true
+#          providerConfigRef:
+#            name: gitlab-provider
+#          writeConnectionSecretToRef:
+#            name: claims-repository-conn
+#            namespace: crossplane-system
+#      patches:
+#        - fromFieldPath: spec.team.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-claims-gitlab-project"
+#        - fromFieldPath: spec.team.name
+#          toFieldPath: spec.forProvider.description
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "Claims repository for team %s"
+#        - fromFieldPath: spec.team.name
+#          toFieldPath: spec.forProvider.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-claims"
+#        - fromFieldPath: spec.team.name
+#          toFieldPath: spec.writeConnectionSecretToRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-claims-repository-conn"
 #    - name: team-claims-argocd-repository
 #      base:
 #        apiVersion: kubernetes.crossplane.io/v1alpha1
