@@ -99,6 +99,11 @@ spec:
                 namespace: crossplane-system
                 fieldPath: data.token
               toFieldPath: spec.forProvider.manifest.stringData.password
+              transforms:
+                - type: string
+                  string:
+                    type: Convert
+                    convert: "FromBase64"
       patches:
         - fromFieldPath: spec.team.name
           toFieldPath: metadata.name
