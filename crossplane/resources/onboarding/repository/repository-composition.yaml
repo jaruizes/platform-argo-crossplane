@@ -92,13 +92,13 @@ spec:
 #                apiVersion: projects.gitlab.crossplane.io/v1alpha1
 #                kind: Project
 #                name: bar
-            - patchesFrom:
-                apiVersion: v1
-                kind: Secret
-                name: gitlab-credentials
-                namespace: crossplane-system
-                fieldPath: data.token
-              toFieldPath: spec.forProvider.manifest.stringData.password
+#            - patchesFrom:
+#                apiVersion: v1
+#                kind: Secret
+#                name: gitlab-credentials
+#                namespace: crossplane-system
+#                fieldPath: data.token
+#              toFieldPath: spec.forProvider.manifest.stringData.password
       patches:
         - fromFieldPath: spec.team.name
           toFieldPath: metadata.name
