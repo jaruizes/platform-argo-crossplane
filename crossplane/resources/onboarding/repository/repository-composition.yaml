@@ -70,7 +70,7 @@ spec:
 
 
     ### HAY QUE CREAR EL REPO
-    - name: team-claims-argocd-app
+    - name: team-claims-argocd-repository
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
         kind: Object
