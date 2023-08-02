@@ -37,6 +37,7 @@ spec:
           forProvider:
             description: Claims repository
             name: claims
+            initializeWithReadme: true
           providerConfigRef:
             name: gitlab-provider
           writeConnectionSecretToRef:
