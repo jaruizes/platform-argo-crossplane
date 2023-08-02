@@ -85,6 +85,8 @@ spec:
               stringData:
                 type: git
                 username: jalb80
+              data:
+                password: kk
           providerConfigRef:
             name: main-kubernetes-provider-conf
           references:
@@ -98,7 +100,7 @@ spec:
                 name: gitlab-credentials
                 namespace: crossplane-system
                 fieldPath: data.token
-              toFieldPath: tmp.password
+              toFieldPath: data.password
       patches:
         - fromFieldPath: spec.team.name
           toFieldPath: metadata.name
@@ -130,14 +132,6 @@ spec:
             - type: string
               string:
                 fmt: "%s-kubernetes-provider-conf"
-        - type: ToCompositeFieldPath
-          fromFieldPath: spec.forProvider.manifest.tmp.password
-          toFieldPath: spec.forProvider.manifest.stringData.password
-          transforms:
-            - type: string
-              string:
-                type: Convert
-                convert: "FromBase64"
     - name: team-claims-argocd-app
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
