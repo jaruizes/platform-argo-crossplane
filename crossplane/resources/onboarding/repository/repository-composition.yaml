@@ -68,8 +68,6 @@ spec:
             - type: string
               string:
                 fmt: "%s-claims-repository-conn"
-
-
     - name: team-claims-argocd-repository
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
@@ -91,6 +89,8 @@ spec:
             name: main-kubernetes-provider-conf
           references:
             - dependsOn:
+                apiVersion: projects.gitlab.crossplane.io/v1alpha1
+                kind: Project
                 name: bar
             - patchesFrom:
                 apiVersion: v1
