@@ -93,7 +93,7 @@ spec:
             - patchesFrom:
                 apiVersion: v1
                 kind: Secret
-                name: generic gitlab-credentials
+                name: gitlab-credentials
                 namespace: crossplane-system
                 fieldPath: data.token
               toFieldPath: spec.forProvider.manifest.stringData.password
