@@ -157,11 +157,6 @@ spec:
                     selfHeal: true
           providerConfigRef:
             name: main-kubernetes-provider-conf
-          references:
-            - dependsOn:
-                apiVersion: v1
-                kind: Secret
-                name: bar
       patches:
         - fromFieldPath: spec.team.name
           toFieldPath: metadata.name
@@ -169,12 +164,6 @@ spec:
             - type: string
               string:
                 fmt: "%s-claims-argocd-app"
-        - fromFieldPath: spec.team.name
-          toFieldPath: spec.references[0].dependsOn.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-claims-argocd-repository"
         - fromFieldPath: spec.team.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
