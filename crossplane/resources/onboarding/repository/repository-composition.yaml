@@ -29,6 +29,44 @@ spec:
                 fmt: "%s-kubernetes-provider-conf"
       readinessChecks:
         - type: None
+    - name: team-claims-gitlab-group
+      base:
+        apiVersion: groups.gitlab.crossplane.io/v1alpha1
+        kind: Group
+        spec:
+          forProvider:
+            description: example group description
+            name: Example Group
+            path: example-group-path
+          providerConfigRef:
+            name: gitlab-provider
+      patches:
+        - fromFieldPath: spec.team.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-team-group"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.description
+          transforms:
+            - type: string
+              string:
+                fmt: "Group for projects for team %s"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s group"
+        - fromFieldPath: spec.team.name
+          toFieldPath: spec.forProvider.path
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-group"
+      readinessChecks:
+        - type: None
     - name: team-claims-gitlab-project
       base:
         apiVersion: projects.gitlab.crossplane.io/v1alpha1
@@ -85,8 +123,6 @@ spec:
               stringData:
                 type: git
                 username: jalb80
-              data:
-                password: kk
           providerConfigRef:
             name: main-kubernetes-provider-conf
           references:
