@@ -46,8 +46,6 @@ spec:
         deployment: kafdrop
         maistra.io/expose-route: 'true'
     spec:
-      nodeSelector:
-        critical: "true"
       containers:
         - name: kafdrop
           image: obsidiandynamics/kafdrop
