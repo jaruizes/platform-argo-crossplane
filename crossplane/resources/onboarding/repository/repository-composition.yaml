@@ -38,6 +38,7 @@ spec:
             description: example group description
             name: Example Group
             path: example-group-path
+            parentId: 70797846
           providerConfigRef:
             name: gitlab-provider
       patches:
