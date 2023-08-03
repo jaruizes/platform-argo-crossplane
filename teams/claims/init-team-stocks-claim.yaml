@@ -1,0 +1,9 @@
+apiVersion: customplatform.jaruiz.io/v1
+kind: InitTeamClaim
+metadata:
+  name: init-stocks
+  labels:
+    cluster-owner: stocks
+spec:
+  team:
+    name: stocks
