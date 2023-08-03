@@ -16,7 +16,7 @@ spec:
     targetRevision: 48.2.3
     helm:
       values: |
-        server:
+        grafana:
           service:
             type: LoadBalancer
   syncPolicy:
