@@ -166,12 +166,21 @@ spec:
             - type: string
               string:
                 fmt: "%s-claims-repository"
-        - fromFieldPath: spec.team.name
-          toFieldPath: spec.forProvider.manifest.stringData.url
-          transforms:
-            - type: string
-              string:
-                fmt: "https://gitlab.com/teams-root/%s/%s-claims.git"
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: spec.team.name
+              - fromFieldPath: spec.team.name
+            strategy: string
+            string:
+              fmt: "https://gitlab.com/teams-root/%s/%s-claims.git"
+          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
+#        - fromFieldPath: spec.team.name
+#          toFieldPath: spec.forProvider.manifest.stringData.url
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "https://gitlab.com/teams-root/%s/%s-claims.git"
         - fromFieldPath: spec.team.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
@@ -224,12 +233,21 @@ spec:
             - type: string
               string:
                 fmt: "%s-claims"
-        - fromFieldPath: spec.team.name
+        - type: CombineFromComposite
+          combine:
+            variables:
+              - fromFieldPath: spec.team.name
+              - fromFieldPath: spec.team.name
+            strategy: string
+            string:
+              fmt: "https://gitlab.com/teams-root/%s/%s-claims.git"
           toFieldPath: spec.forProvider.manifest.spec.source.repoURL
-          transforms:
-            - type: string
-              string:
-                fmt: "https://gitlab.com/teams-root/%s/%s-claims.git"
+#        - fromFieldPath: spec.team.name
+#          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "https://gitlab.com/teams-root/%s/%s-claims.git"
         - fromFieldPath: spec.team.name
           toFieldPath: spec.forProvider.manifest.spec.destination.namespace
           transforms:
