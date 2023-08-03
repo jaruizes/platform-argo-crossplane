@@ -12,15 +12,13 @@ spec:
   project: default
   source:
     repoURL: https://prometheus-community.github.io/helm-charts/
-    chart: prometheus
-    targetRevision: 19.7.2
+    chart: kube-prometheus-stack
+    targetRevision: 48.2.3
     helm:
       values: |
         server:
           service:
             type: LoadBalancer
-        alertmanager:
-          enabled: false
   syncPolicy:
     automated:
       prune: true
