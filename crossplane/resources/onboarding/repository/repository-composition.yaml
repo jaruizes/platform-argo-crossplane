@@ -192,7 +192,7 @@ spec:
               spec:
                 project: default
                 source:
-                  path: './'
+                  path: './claims'
                   targetRevision: HEAD
                 destination:
                   server: https://kubernetes.default.svc
@@ -229,7 +229,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://gitlab.com/jalb80/%s-claims.git"
+                fmt: "https://gitlab.com/teams-root/%s/%s-claims.git"
         - fromFieldPath: spec.team.name
           toFieldPath: spec.forProvider.manifest.spec.destination.namespace
           transforms:
