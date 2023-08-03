@@ -16,6 +16,7 @@ spec:
     targetRevision: 48.2.3
     helm:
       values: |
+        namespaceOverride: monitoring
         grafana:
           service:
             type: LoadBalancer
