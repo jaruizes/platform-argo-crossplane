@@ -174,7 +174,7 @@ spec:
             strategy: string
             string:
               fmt: "https://gitlab.com/teams-root/%s/%s-claims.git"
-          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
+          toFieldPath: spec.forProvider.manifest.stringData.url
 #        - fromFieldPath: spec.team.name
 #          toFieldPath: spec.forProvider.manifest.stringData.url
 #          transforms:
