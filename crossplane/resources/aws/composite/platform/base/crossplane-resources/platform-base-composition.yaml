@@ -802,7 +802,7 @@ spec:
 #              string:
 #                fmt: "%s"
         - fromFieldPath: spec.name
-          toFieldPath: spec.vpcSecurityGroupIdRefs[0].name
+          toFieldPath: spec.forProvider.vpcSecurityGroupIdRefs[0].name
           transforms:
             - type: string
               string:
