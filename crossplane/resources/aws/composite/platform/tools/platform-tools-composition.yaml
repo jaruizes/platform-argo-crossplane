@@ -13,17 +13,17 @@ spec:
     apiVersion: jaruiz.crossplane.io/v1
     kind: platformtools
   resources:
-#    - name: main-kubernetes-provider-conf
-#      base:
-#        apiVersion: kubernetes.crossplane.io/v1alpha1
-#        kind: ProviderConfig
-#        metadata:
-#          name: main-kubernetes-provider
-#        spec:
-#          credentials:
-#            source: InjectedIdentity
-#      readinessChecks:
-#        - type: None
+    - name: main-kubernetes-provider-conf
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: ProviderConfig
+        metadata:
+          name: main-kubernetes-provider
+        spec:
+          credentials:
+            source: InjectedIdentity
+      readinessChecks:
+        - type: None
     - name: team-provider-config
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
