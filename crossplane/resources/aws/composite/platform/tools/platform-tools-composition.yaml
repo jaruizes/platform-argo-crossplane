@@ -312,8 +312,6 @@ spec:
                   automated:
                     prune: true
                     selfHeal: true
-          providerConfigRef:
-            name: main-kubernetes-provider
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
