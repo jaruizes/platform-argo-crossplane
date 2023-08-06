@@ -411,7 +411,7 @@ spec:
         kind: SecurityGroup
         metadata:
           labels:
-            access: public
+            owner: team
         spec:
           deletionPolicy: Delete
           forProvider:
@@ -433,6 +433,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-vpc"
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.labels.owner
+          transforms:
+            - type: string
+              string:
+                fmt: "%s"
     - name: eks-sg-rule-1
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
@@ -462,6 +468,36 @@ spec:
             - type: string
               string:
                 fmt: "%s-sg"
+    - name: eks-sg-rule-2
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: SecurityGroupRule
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            region: eu-west-3
+            fromPort: 0
+            toPort: 0
+            protocol: "-1"
+            securityGroupIdRef:
+              name: example
+            cidrBlocks:
+              - 0.0.0.0/0
+            type: ingress
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg-rule-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.securityGroupIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+
     - name: eks-internetGateway
       base:
         apiVersion: ec2.aws.upbound.io/v1beta1
@@ -644,7 +680,38 @@ spec:
               - name: sample-subnet1
               - name: sample-subnet2
               - name: sample-subnet2
+        references:
+          - dependsOn:
+              apiVersion: ec2.aws.upbound.io/v1beta1
+              kind: Subnet
+              name: bar
+          - dependsOn:
+              apiVersion: ec2.aws.upbound.io/v1beta1
+              kind: Subnet
+              name: bar
+          - dependsOn:
+              apiVersion: ec2.aws.upbound.io/v1beta1
+              kind: Subnet
+              name: bar
       patches:
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[0].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[1].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[2].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-3"
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
           transforms:
@@ -694,11 +761,44 @@ spec:
               name: rds-subnet-group
             vpcSecurityGroupIdSelector:
               matchLabels:
-                access: public
+                owner: team
           writeConnectionSecretToRef:
             name: example-dbinstance-out
             namespace: crossplane-system
+          references:
+            - dependsOn:
+                apiVersion: rds.aws.upbound.io/v1beta1
+                kind: SubnetGroup
+                name: bar
+            - dependsOn:
+                apiVersion: ec2.aws.upbound.io/v1beta1
+                kind: SecurityGroup
+                name: bar
       patches:
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[0].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet-group"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[1].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-db-instance"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.vpcSecurityGroupIdSelector.matchLabels.owner
+          transforms:
+            - type: string
+              string:
+                fmt: "%s"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.dbSubnetGroupNameRef.name
           transforms:
