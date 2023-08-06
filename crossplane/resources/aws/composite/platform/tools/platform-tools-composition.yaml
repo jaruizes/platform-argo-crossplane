@@ -321,12 +321,3 @@ spec:
               - type: string
                 string:
                   fmt: "%s-platform-tools"
-
-
-
-
-
-
-
-
-
