@@ -759,9 +759,11 @@ spec:
             username: adminuser
             dbSubnetGroupNameRef:
               name: rds-subnet-group
-            vpcSecurityGroupIdSelector:
-              matchLabels:
-                owner: team
+#            vpcSecurityGroupIdSelector:
+#              matchLabels:
+#                owner: team
+            vpcSecurityGroupIdRefs:
+              - name: sg
           writeConnectionSecretToRef:
             name: example-dbinstance-out
             namespace: crossplane-system
@@ -793,12 +795,18 @@ spec:
             - type: string
               string:
                 fmt: "%s-db-instance"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.vpcSecurityGroupIdSelector.matchLabels.owner
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s"
         - fromFieldPath: spec.name
-          toFieldPath: spec.vpcSecurityGroupIdSelector.matchLabels.owner
+          toFieldPath: spec.vpcSecurityGroupIdRefs[0].name
           transforms:
             - type: string
               string:
-                fmt: "%s"
+                fmt: "%s-sg"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.dbSubnetGroupNameRef.name
           transforms:
