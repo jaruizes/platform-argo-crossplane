@@ -321,12 +321,6 @@ spec:
               - type: string
                 string:
                   fmt: "%s-platform-tools"
-#        - fromFieldPath: spec.name
-#          toFieldPath: spec.providerConfigRef.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-k8s-provider-config"
 
 
 
