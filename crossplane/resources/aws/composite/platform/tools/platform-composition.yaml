@@ -13,7 +13,18 @@ spec:
     apiVersion: jaruiz.crossplane.io/v1
     kind: platform
   resources:
-    - name: eks-k8s-provider-config
+    - name: main-kubernetes-provider-conf
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: ProviderConfig
+        metadata:
+          name: main-kubernetes-provider
+        spec:
+          credentials:
+            source: InjectedIdentity
+      readinessChecks:
+        - type: None
+    - name: team-provider-config
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
         kind: ProviderConfig
@@ -267,7 +278,7 @@ spec:
             - type: string
               string:
                 fmt: "%s-k8s-provider-config"
-    - name: ns-argocd-platform-app
+    - name: ns-argocd-platform-tools-app
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
         kind: Object
@@ -295,20 +306,27 @@ spec:
                     prune: true
                     selfHeal: true
           providerConfigRef:
-            name: kubernetes-provider
+            name: main-kubernetes-provider
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
           transforms:
             - type: string
               string:
-                fmt: "%s-argocd-onboarding-app"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.providerConfigRef.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-k8s-provider-config"
+                fmt: "%s-argocd-platform-tools-app"
+        patches:
+          - fromFieldPath: spec.name
+            toFieldPath: spec.forProvider.manifest.metadata.name
+            transforms:
+              - type: string
+                string:
+                  fmt: "%s-platform-tools"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.providerConfigRef.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-k8s-provider-config"
 
 
 

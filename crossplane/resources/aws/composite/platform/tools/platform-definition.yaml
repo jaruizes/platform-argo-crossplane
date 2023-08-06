@@ -1,17 +1,17 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: platforms.jaruiz.crossplane.io
+  name: platformstools.jaruiz.crossplane.io
 spec:
   connectionSecretKeys:
     - kubeconfig
   group: jaruiz.crossplane.io
   names:
-    kind: platform
-    plural: platforms
+    kind: platformtools
+    plural: platformstools
   claimNames:
-    kind: platformclaim
-    plural: platformclaims
+    kind: platformtoolsclaim
+    plural: platformstoolsclaims
   versions:
     - name: v1
       served: true
