@@ -315,12 +315,12 @@ spec:
               string:
                 fmt: "%s-argocd-platform-tools-app"
         patches:
-          - fromFieldPath: spec.name
-            toFieldPath: spec.forProvider.manifest.metadata.name
-            transforms:
-              - type: string
-                string:
-                  fmt: "%s-platform-tools"
+#          - fromFieldPath: spec.name
+#            toFieldPath: spec.forProvider.manifest.metadata.name
+#            transforms:
+#              - type: string
+#                string:
+#                  fmt: "%s-platform-tools"
           - fromFieldPath: spec.name
             toFieldPath: spec.providerConfigRef.name
             transforms:
