@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cicd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jaruizes/platform-argo-crossplane.git
+    targetRevision: HEAD
+    path: ./platform-gitops-repositories/cicd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cicd
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
