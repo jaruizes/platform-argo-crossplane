@@ -175,36 +175,6 @@ We'll also use ArgoCD to manage the multiple claims requests to create infrastru
 
 
 
-#### Crossplane resources: compositions, definitions and claims
-
-We are defined three stages to build and provision the complete platform:
-
-1. Platform base: provisioning the kubernetes cluster and Postgresql instance
-2. Platform tools: install and configure the platform tools over the kubernetes provisioned
-3. Platform dev: create the different dev and Gitops repositories and install and configure CI/CD tools
-
-
-
-Let's see which components are necessary in each stage:
-
-
-
-##### Platform base
-
-In this stage we need to create this crossplane objects:
-
-- Composition: the compositi
-
-
-
-
-
-
-
-
-
-
-
 
 
 ## Hands-on
@@ -420,9 +390,11 @@ As you can see, in this claim we only can set the name of the team. In our case,
 
 Now, we push this file to the repository:
 
-![eks-claim-team-x](doc/pictures/eks-claim-team-x.jpg)
+![eks-claim-team-x](doc/pictures/product-base-platform-claim-push.jpg)
 
-Now, if we go to ArgoCD and we open the application "**teams-claims**", we'll see how all the components associated to the composition are being created:
+
+
+Now, if we go to ArgoCD and we open the application "**teams-claims**" and refresh it, we'll see how all the components associated to the composition are being created (it will last 10 or 15 minutes...):
 
 ![argocd_cluster_created](doc/pictures/argocd_cluster_created.jpg)
 
@@ -439,8 +411,8 @@ kubectl get clusters.eks.aws.upbound.io -n crossplane-system
 we'll see how our cluster is ready:
 
 ```bash
-NAME                 READY   SYNCED   EXTERNAL-NAME        AGE
-k8s-team-x-cluster   True    True     k8s-team-x-cluster   9m59s
+NAME               READY   SYNCED   EXTERNAL-NAME      AGE
+products-cluster   True    True     products-cluster   23m
 ```
 
 
@@ -448,7 +420,7 @@ k8s-team-x-cluster   True    True     k8s-team-x-cluster   9m59s
 And, once the cluster is created, we can check the secret containing the connection details:
 
 ```bash
-kubectl describe secret k8s-team-x-conn  -n crossplane-system
+kubectl describe secret products-conn  -n crossplane-system
 ```
 
 
@@ -456,7 +428,7 @@ kubectl describe secret k8s-team-x-conn  -n crossplane-system
 The result should be similar to this:
 
 ```bash
-Name:         k8s-team-x-conn
+Name:         products-conn
 Namespace:    crossplane-system
 Labels:       <none>
 Annotations:  <none>
@@ -465,11 +437,38 @@ Type:  connection.crossplane.io/v1alpha1
 
 Data
 ====
-clusterCA:   1099 bytes
+clusterCA:   1107 bytes
 endpoint:    72 bytes
-kubeconfig:  2371 bytes
+kubeconfig:  2367 bytes
 
 ```
+
+
+
+#### Platform tools
+
+Once the base platform is ready, we need to push the next claim to the repository. As we did before, we copy the example file ("claims-example/platformtools-claim.yaml") to the folder "platform-gitops-repositories/claims" and call it "products-platform-tools-claim.yaml", for instance. 
+
+So, if we assume that we are going to create the platform tools for the products team, the claim file will have the following content:
+
+```yaml
+apiVersion: jaruiz.crossplane.io/v1
+kind: platformtoolsclaim
+metadata:
+  name: products-platform-tools
+  labels:
+    cluster-owner: products-team
+spec:
+  name: products
+```
+
+
+
+As in the previous case, we only have to specify the name of the team ("products"). We push it to the repository and refresh the claims application in ArgoCD. We'll see how new components are being created:
+
+![argocd_cluster_created](doc/pictures/argocd_platform_tools_created.jpg)
+
+
 
 
 
