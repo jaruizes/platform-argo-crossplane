@@ -445,6 +445,52 @@ kubeconfig:  2367 bytes
 
 
 
+We need to add this connection to our kubeconfig. As we as creating an EKS cluster, we can get it executing:
+
+```bash
+aws eks update-kubeconfig --region eu-west-3 --name products-cluster 
+```
+
+
+
+Now, we can get the ArgoCD url for this cluster executing:
+
+```
+kubectl get service products-argo-helm-release-argocd-server -n argocd -o jsonpath='https://{.status.loadBalancer.ingress[0].hostname}:{.spec.ports[0].port}/'
+```
+
+
+
+The result should be similar to:
+
+```
+https://a3f6a0cac799d43f499454fe15873d0c-976441945.eu-west-3.elb.amazonaws.com:80/
+```
+
+
+
+And, you can get the admin password, executing:
+
+```
+kubectl get secret argocd-initial-admin-secret -n argocd --template={{.data.password}} | base64 -D
+```
+
+
+
+The result should be similar to:
+
+```
+vKIAMHerbUsvIiP2
+```
+
+
+
+Write it down because we'll need it in the next step
+
+
+
+
+
 #### Platform tools
 
 Once the base platform is ready, we need to push the next claim to the repository. As we did before, we copy the example file ("claims-example/platformtools-claim.yaml") to the folder "platform-gitops-repositories/claims" and call it "products-platform-tools-claim.yaml", for instance. 
@@ -467,6 +513,12 @@ spec:
 As in the previous case, we only have to specify the name of the team ("products"). We push it to the repository and refresh the claims application in ArgoCD. We'll see how new components are being created:
 
 ![argocd_cluster_created](doc/pictures/argocd_platform_tools_created.jpg)
+
+
+
+Now, if we go to Products ArgoCD url, we'll see the platform tools applications installed:
+
+![argocd_platform_tools_installed](doc/pictures/argocd_platform_tools_installed.jpg)
 
 
 
