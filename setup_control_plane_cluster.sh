@@ -16,12 +16,19 @@ installCrossplane() {
   helm repo add crossplane-stable https://charts.crossplane.io/stable
   helm repo update
   helm install crossplane crossplane-stable/crossplane --namespace crossplane-system --create-namespace
-  sleep 30
+  sleep 120
 }
 
-installAWSProvider() {
-  kubectl apply -f crossplane/providers/aws-provider.yaml -n crossplane-system
-  sleep 90
+installProviders() {
+  kubectl apply -f control-plane/crossplane/providers/aws-provider.yaml -n crossplane-system
+  sleep 10
+  kubectl apply -f crossplane/providers/k8s-provider.yaml -n crossplane-system
+  sleep 10
+  kubectl apply -f crossplane/providers/helm-provider.yaml -n crossplane-system
+  sleep 10
+  kubectl apply -f crossplane/providers/gitlab-provider.yaml -n crossplane-system
+  kubectl create secret generic gitlab-credentials -n crossplane-system --from-literal=token="$GITLAB_TOKEN"
+  sleep 300
 }
 
 createSecretAWSCredentials() {
@@ -49,16 +56,19 @@ createTeamsNamespace() {
 setupGitlabProvider() {
   kubectl create secret generic gitlab-credentials -n crossplane-system --from-literal=token="$GITLAB_TOKEN"
   kubectl apply -f crossplane/providers/gitlab-provider.yaml -n crossplane-system
-  sleep 60
-  kubectl apply -f crossplane/providers/gitlab-provider-config.yaml -n crossplane-system
-  sleep 10
+#  sleep 120
+#  kubectl apply -f crossplane/providers/gitlab-provider-config.yaml -n crossplane-system | true
+#  sleep 30
 }
 
-installHelmAndK8sProviders() {
-  kubectl apply -f crossplane/providers/helm-provider.yaml -n crossplane-system
-  sleep 60
-  kubectl apply -f crossplane/providers/k8s-provider.yaml -n crossplane-system
-  sleep 30
+configureK8sProviderSA() {
+#  kubectl apply -f crossplane/providers/k8s-provider.yaml -n crossplane-system
+#  sleep 10
+#  kubectl apply -f crossplane/providers/helm-provider.yaml -n crossplane-system
+#  sleep 300
+
+  SA=$(kubectl -n crossplane-system get sa -o name | grep provider-kubernetes | sed -e 's|serviceaccount\/|crossplane-system:|g')
+  kubectl create clusterrolebinding provider-kubernetes-admin-binding --clusterrole cluster-admin --serviceaccount="${SA}"
 }
 
 configureKubectl() {
@@ -67,7 +77,7 @@ configureKubectl() {
 
 setupCrossplane() {
   installCrossplane
-  installAWSProvider
+  installProviders
   createSecretAWSCredentials
   configAWSProviderToUseAWSCredentials
 }
@@ -93,9 +103,9 @@ setup() {
   createTeamsNamespace
   installArgoCD
   setupCrossplane
-  configureArgoCDApps
+#  configureArgoCDApps
 #  setupGitlabProvider
-  installHelmAndK8sProviders
+  configureK8sProviderSA
   showInfo
 }
 

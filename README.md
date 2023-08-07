@@ -4,7 +4,15 @@
 
 ## Introduction
 
-In this PoC you will learn how to manage cloud infrastructure by using Kubernetes, Crossplane and ArgoCD
+In this repository we are going to see how to automate the creation of a new development environment for a team. We'll provide an environment with these capabilities:
+
+
+
+- A Kubernetes cluster ready to be used
+- A set of git repositories
+- A base platform ready with Kafka and Kafka tools, Redis, Postgresql, Prometheus or Grafana
+- An example application using this platform in order to being used as starter point for the dev team
+- A CI/CD based on Tekton and ArgoCD configured and ready
 
 
 
@@ -14,10 +22,11 @@ In this PoC you will learn how to manage cloud infrastructure by using Kubernete
 - [Eksctl](https://eksctl.io/)
 - Kubectl
 - Helm
+- Gitlab Account and token
 
 
 
-## Repository structure
+## Repository structure (WIP)
 
 This image shows the repository structure:
 
@@ -25,23 +34,208 @@ This image shows the repository structure:
 
 
 
-## Setting everything up
+## The use case
 
-This image shows how the PoC works:
-
-![workflow](doc/pictures/workflow.jpg)
+In this PoC we are going to automate an IDP creation for our company. In our case, the current development environment is composed for these components: 
 
 
 
-### Creating an initial Kubernetes cluster
+- A Kubernetes cluster
+- A Postgresql instance
+- A Kafka broker and some UI Tool
+- Redis
+- Prometheus and Grafana
+- CI/CD
 
-So, the first step is to create an initial Kubernetes cluster in order to install Crossplane and ArgoCD.
-
-![Diagram showing a user communicating to Kubernetes. Crossplane connected to Kubernetes and Crossplane communicating with AWS, Azure and GCP](https://docs.crossplane.io/content/media/crossplane-intro-diagram_hud9dc847ee0e2ab0b53319b680d79d1fd_55780_828x273_resize_q75_h2_box_3.webp)
 
 
+So, our teams need an IDP with these requirements. The following image describes these requirements:
 
-In this case, we are going to create an EKS cluster using [eksctl](https://eksctl.io/) and the cluster configuration is in the file *cluster-conf.yaml*.
+
+
+![requirements](doc/pictures/requirements.jpg)
+
+
+
+Install and maintain this IDP isn't productive for development teams so it was decided to delegate these tasks to a Platform team in order to the development teams keep their focus on build business capabilities instead on keeping their environments up and running. 
+
+This Platform team also needs to automate those kind of tasks in order to:
+
+- Be more efficient, productive and avoid human mistakes when perform platform tasks
+- Build golden paths over the platform to help the development teams to build business capabilities 
+- Be able to evolve the platform 
+
+
+
+*TODO: Governance, Networks, security groups, etc...Talking about how difficult are those points*
+
+
+
+## Solution design
+
+- Design the steps to provide an IDP
+
+- Decide how the provisioning of the IDP is going to be automated
+
+  
+
+### IDP
+
+The target of this stage is to provide an IDP ready to be used for the development teams. This IDP has to meet the requirements described above.
+
+So, the platform team begins to design the platform and how it could be automated. In order to separate concerns and build an evolvable platform, they decided to perform multiple steps to build the IDP instead of having just one. So, the steps to automate the creation of the platform are summarized in this picture:
+
+![steps](doc/pictures/steps.jpg)
+
+So, the steps are:
+
+1. Automate the creation of the platform base, that means, creating the kubernetes cluster and the main database. The reasons to perform this step seperated are:
+
+   - being able to choose different kubernetes and database providers (AWS, GCP, Azure,...) without impacting in development teams or even, being able to provide different physicall platforms depending on the needs. For instance: development, QA,...,etc
+
+   - keeping the process of providing the main infrastructure isolated to be evolved when needed
+
+     
+
+2. Automate the creation of the platform tools. The reasons to perform this step seperated are:
+
+   - adding, updating (for instance, versions) or deleting tools autonomously with minimum impact in development teams
+
+   - being able to choose different options depending on the context. For instance: an open source Kafka provider for dev environments and a licensed Kafka provider for production environment
+
+   - keeping the process of providing the platform tools isolated to be evolved when needed
+
+     
+
+3. Automate the creation of the development repositories and CI/CD tools. The reasons to perform this step seperated are:
+
+   - providing repositories with the right structure and with an example of the component to develop (for instance: microservice, spa, etc...)
+   - providing CI/CD tools ready to be used for the development teams, allowing them to easily build and deploy business features
+
+
+
+### How to automate the provisioning of IDPs
+
+Once the steps to provide an IDP are designed, the platform team has to decide what tools can use to automate the steps to build the IDP. 
+
+The platform team chooses [Crossplane](https://www.crossplane.io/) and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) in order to create a control plane cluster to provide, centrally, the IDPs:
+
+![crossplane-cluster](doc/pictures/crossplane-cluster.jpg)
+
+
+
+From this control plane, the different steps to create the IDP will be automated and managed.
+
+
+
+### Putting everything together
+
+#### The (k8s) control plane cluster
+
+The following picture shows the target to achieve:
+
+
+
+![step1](doc/pictures/step1.jpg)
+
+So, the first step is to create a K8s cluster to be the control plane cluster. In this PoC we are going to create and use an AWS EKS cluster but you can use other K8s distribution if you want. 
+
+Let's see that in more detail how this cluster is going to be composed:
+
+
+
+##### Crossplane
+
+[Crossplane](https://www.crossplane.io/) is the core of our control plane cluster. By Crossplane, we'll automate the infrastructure creation using a declarative way (Kubernetes-style). So, we are going to deploy Crossplane and configure it with these components:
+
+- Compositions, definitions and claims: in this PoC, we'll provide resources and claims to create an EKS cluster and a Postgresql RDS instance
+
+- Providers: we'll install these providers:
+
+  - AWS: this provider will be used to create and manage AWS infrastructure 
+  - K8s: by this provider we'll be able to create objects in the managed kubernetes
+  - Helm: to manage and deploy Helm charts in K8s clusters
+  - Gitlab: we'll use this provider to create groups and projects in Gitlab in order to provide repositories to the different teams
+
+   
+
+##### ArgoCD
+
+We are going to use [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) to implement GitOps and being able to keep always synchronized Crossplane resources with the "Platform Repository". By this way, everytime a resource is updated in Git, the change is propagated automatically to our control plane cluster. 
+
+![argo-crossplane-resources](doc/pictures/argo-crossplane-resources.jpg)
+
+
+
+We'll also use ArgoCD to manage the multiple claims requests to create infrastructure. So, when a dev team needs a Kubernetes cluster to build and deploy its applications, it creates a claim file and push it to "Claim Requests Repository". Then, ArgoCD pulls that change and creates a new claim object managed by Crossplane. Finally, Crossplane creates the infrastructure associated to that claim
+
+
+
+![how-claims-works](doc/pictures/how-claims-works.jpg)
+
+
+
+#### Crossplane resources: compositions, definitions and claims
+
+We are defined three stages to build and provision the complete platform:
+
+1. Platform base: provisioning the kubernetes cluster and Postgresql instance
+2. Platform tools: install and configure the platform tools over the kubernetes provisioned
+3. Platform dev: create the different dev and Gitops repositories and install and configure CI/CD tools
+
+
+
+Let's see which components are necessary in each stage:
+
+
+
+##### Platform base
+
+In this stage we need to create this crossplane objects:
+
+- Composition: the compositi
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Hands-on
+
+
+
+### Control Plane Cluster
+
+The first step is creating and configuring the Control Plane Cluster. 
+
+In this PoC, we are going to create an EKS cluster using [eksctl](https://eksctl.io/). The cluster configuration is in the file *cluster-conf.yaml*.
+
+
+
+```yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: crossplane-poc-cluster
+  region: eu-west-3
+  version: "1.27"
+
+nodeGroups:
+  - name: ng-1
+    instanceType: m5.xlarge
+    desiredCapacity: 2
+    volumeSize: 80
+```
+
+
 
 The following script encapsulates the cluster creation:
 
@@ -51,12 +245,20 @@ sh create-cluster.sh
 
 
 
+Once the creation is finished, we have an empty EKS:
+
+![empty_eks](doc/pictures/empty_eks.jpg)
+
+The next step is to configure ArgoCD and Crossplane.
+
+
+
 ### Installing ArgoCD and Crossplane
 
 Once the main cluster is up and running, we have to install and configure [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) and [Crossplane](https://www.crossplane.io/). To do this, just execute the following script:
 
 ```bash
-sh setup.sh <AWS_ACCESS_KEY_ID> <AWS_SECRET_ACCESS_KEY>
+sh setup_control_plane_cluster.sh <AWS_ACCESS_KEY_ID> <AWS_SECRET_ACCESS_KEY> <GITLAB_TOKEN>
 ```
 
 
@@ -70,15 +272,56 @@ ARGOCD Credentials: admin/FkmHYXTwAWT33eFZ
 
 
 
-If we go to this URL we'll enter to ArgoCD and we'll see that there are two applications created:
+Now, we have our control plane cluster ready:
 
-![argocd_init_screen](doc/pictures/argocd_apps.jpg)
+![step1](doc/pictures/setup_control_plane_cluster.jpg)
 
-Why those two applications?
+
+
+If we go to ArgoCD url we'll see that there are no applications:
+
+![argocd_init_screen](doc/pictures/empty_argocd.jpg)
+
+
+
+In the next steps, we'll create two applications: crossplane-resources and claims
+
+
+
+### ArgoCD Applications
+
+Now, we need to create two ArgoCD applications
+
+- crossplane-resources
+- claims
+
+
+
+With these two applications, our control plane cluster will be ready to manage claims
+
+![step1](doc/pictures/step1.jpg)
+
+
+
+To create the applications, just execute the following script:
+
+```bash
+sh setup_control_plane_argocd_apps.sh
+```
+
+
+
+Once the script finishes, if we enter to the ArgoCD url we'll see these two applications created:
+
+![argocd_apps](doc/pictures/argocd_apps.jpg)
+
+Let's see them in more detail
+
+
 
 #### ArgoCD App: crossplane-resources
 
-This app is listening for changes in "https://github.com/jaruizes/platform-argo-crossplane/crossplane/resources" . So, if we add more crossplane composites or update what exists, ArgoCD applies those changes to the main kubernetes cluster. 
+We have to create an application to keep synchronized crossplane resources between the platform git repository and the control plane cluster. This app is listening for changes in "https://github.com/jaruizes/platform-argo-crossplane/platform-gitops-repositories/crossplane-resources" . So, if we add more crossplane composites or update what exists, ArgoCD applies those changes to the main kubernetes cluster. 
 
 If you click in this app, you can see that two objects are managed by ArgoCD:
 
@@ -261,3 +504,13 @@ Once the team cluster is deleted we can destroy the main cluster executing:
 sh delete-cluster.sh
 ```
 
+
+
+
+
+
+
+## Next steps
+
+- Crossplane testing: how to test compositions, definitions, etc...
+- A dev portal like Backstage

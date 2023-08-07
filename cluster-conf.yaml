@@ -4,9 +4,10 @@ kind: ClusterConfig
 metadata:
   name: crossplane-poc-cluster
   region: eu-west-3
+  version: "1.27"
 
 nodeGroups:
   - name: ng-1
-    instanceType: m5.large
+    instanceType: m5.xlarge
     desiredCapacity: 2
     volumeSize: 80

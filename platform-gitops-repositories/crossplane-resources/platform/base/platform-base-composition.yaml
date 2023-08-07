@@ -1,0 +1,821 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: platformbase
+  labels:
+    provider: aws
+    cluster: eks
+spec:
+  patchSets:
+    - name: metadata
+      patches:
+        - fromFieldPath: metadata.labels
+  compositeTypeRef:
+    apiVersion: jaruiz.crossplane.io/v1
+    kind: platformbase
+  resources:
+    #### EKS CLUSTER & CLUSTER AUTH ####
+    - name: eks-cluster
+      base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: Cluster
+        metadata:
+          annotations:
+            uptest.upbound.io/timeout: "2400"
+        spec:
+          forProvider:
+            region: eu-west-3
+            roleArnRef:
+              name: teama-cluster-role
+            vpcConfig:
+              - subnetIdRefs:
+                  - name: public-subnet-1
+                  - name: public-subnet-2
+                  - name: public-subnet-3
+                endpointPrivateAccess: true
+                endpointPublicAccess: true
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleArnRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster-role"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcConfig[0].subnetIdRefs[0].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcConfig[0].subnetIdRefs[1].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcConfig[0].subnetIdRefs[2].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-3"
+      readinessChecks:
+        - type: MatchString
+          fieldPath: status.atProvider.status
+          matchString: ACTIVE
+    - name: eks-clusterAuth
+      base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: ClusterAuth
+        spec:
+          forProvider:
+            region: eu-west-3
+            clusterNameRef:
+              name: eks-cluster
+          writeConnectionSecretToRef:
+            name: cluster-conn
+            namespace: crossplane-system
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.clusterNameRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-conn"
+
+
+    #### ROLE && ROLE ATTACHMENT
+    - name: eks-cluster-role
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Role
+        spec:
+          forProvider:
+            assumeRolePolicy: |
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "eks.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              }
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster-role"
+    - name: eks-role-policy-attachment
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+            roleRef:
+              name: eks-cluster-role
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-policy"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster-role"
+
+
+    ### VPC
+    - name: eks-vpc
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: VPC
+        spec:
+          forProvider:
+            enableDnsHostnames: true
+            region: eu-west-3
+            cidrBlock: 10.0.0.0/16
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+
+    ### PRIVATE SUBNETS
+    - name: eks-public-subnet-1
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Subnet
+        spec:
+          forProvider:
+            region: eu-west-3
+            mapPublicIpOnLaunch: true
+            availabilityZone: eu-west-3a
+            vpcIdRef:
+              name: sample-vpc
+            cidrBlock: 10.0.1.0/24
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+    - name: eks-public-subnet-2
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Subnet
+        spec:
+          forProvider:
+            region: eu-west-3
+            mapPublicIpOnLaunch: true
+            availabilityZone: eu-west-3b
+            vpcIdRef:
+              name: sample-vpc
+            cidrBlock: 10.0.2.0/24
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+    - name: eks-public-subnet-3
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Subnet
+        spec:
+          forProvider:
+            region: eu-west-3
+            mapPublicIpOnLaunch: true
+            availabilityZone: eu-west-3c
+            vpcIdRef:
+              name: sample-vpc
+            cidrBlock: 10.0.3.0/24
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-3"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+
+
+    #### NODEGROUP
+    - name: eks-nodeGroup
+      base:
+        apiVersion: eks.aws.upbound.io/v1beta1
+        kind: NodeGroup
+        spec:
+          forProvider:
+            clusterNameRef:
+              name: sample-eks-cluster
+            nodeRoleArnRef:
+              name: sample-node-role
+            region: eu-west-3
+            instanceTypes:
+              - m5.large
+            scalingConfig:
+              - desiredSize: 2
+                maxSize: 2
+                minSize: 1
+            subnetIdRefs:
+              - name: public-subnet-1
+              - name: public-subnet-2
+              - name: public-subnet-3
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.clusterNameRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-cluster"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.nodeRoleArnRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRefs[0].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRefs[1].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRefs[2].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-3"
+      readinessChecks:
+        - type: MatchString
+          fieldPath: status.atProvider.status
+          matchString: ACTIVE
+
+    - name: nodegroup-role
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: Role
+        spec:
+          forProvider:
+            assumeRolePolicy: |
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "ec2.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              }
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
+
+    - name: nodegroup-policy-attachment1
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+            roleRef:
+              name: sample-node-role
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-policy-attachment1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
+
+    - name: nodegroup-policy-attachment2
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+            roleRef:
+              name: sample-node-role
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-policy-attachment2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
+    - name: nodegroup-policy-attachment3
+      base:
+        apiVersion: iam.aws.upbound.io/v1beta1
+        kind: RolePolicyAttachment
+        spec:
+          forProvider:
+            policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+            roleRef:
+              name: sample-node-role
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-policy-attachment3"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.roleRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-nodegroup-role"
+
+    ## SECURITY GROUP
+    - name: eks-sg
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: SecurityGroup
+        metadata:
+          labels:
+            owner: team
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            tags:
+              name: eks-sg
+            region: eu-west-3
+            vpcIdRef:
+              name: sample-vpc
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.labels.owner
+          transforms:
+            - type: string
+              string:
+                fmt: "%s"
+    - name: eks-sg-rule-1
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: SecurityGroupRule
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            region: eu-west-3
+            fromPort: 0
+            toPort: 0
+            protocol: "-1"
+            securityGroupIdRef:
+              name: example
+            cidrBlocks:
+              - 0.0.0.0/0
+            type: egress
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg-rule-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.securityGroupIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+    - name: eks-sg-rule-2
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: SecurityGroupRule
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            region: eu-west-3
+            fromPort: 0
+            toPort: 0
+            protocol: "-1"
+            securityGroupIdRef:
+              name: example
+            cidrBlocks:
+              - 0.0.0.0/0
+            type: ingress
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg-rule-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.securityGroupIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+
+    - name: eks-internetGateway
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: InternetGateway
+        spec:
+          forProvider:
+            tags:
+              name: eks-ig
+            region: eu-west-3
+            vpcIdRef:
+              name: sample-vpc
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-ig"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+    - name: eks-routeTable
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTable
+        spec:
+          forProvider:
+            tags:
+              name: eks-rt
+            region: eu-west-3
+            vpcIdRef:
+              name: sample-vpc
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-vpc"
+    - name: eks-route-1
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: Route
+        spec:
+          forProvider:
+            destinationCidrBlock: 0.0.0.0/0
+            gatewayIdRef:
+              name: routegw
+            region: eu-west-3
+            routeTableIdRef:
+              name: table
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.gatewayIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-ig"
+    - name: eks-routetable-association-1
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTableAssociation
+        spec:
+          forProvider:
+            region: eu-west-3
+            routeTableIdRef:
+              name: rta
+            subnetIdRef:
+              name: rta
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable-association-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-1"
+
+    - name: eks-routetable-association-2
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTableAssociation
+        spec:
+          forProvider:
+            region: eu-west-3
+            routeTableIdRef:
+              name: rta
+            subnetIdRef:
+              name: rta
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable-association-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-2"
+
+    - name: eks-routetable-association-3
+      base:
+        apiVersion: ec2.aws.upbound.io/v1beta1
+        kind: RouteTableAssociation
+        spec:
+          forProvider:
+            region: eu-west-3
+            routeTableIdRef:
+              name: rta
+            subnetIdRef:
+              name: rta
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-routetable-association-3"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.routeTableIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-route-table"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-3"
+    - name: rds-subnet-group
+      base:
+        apiVersion: rds.aws.upbound.io/v1beta1
+        kind: SubnetGroup
+        spec:
+          forProvider:
+            region: eu-west-3
+            subnetIdRefs:
+              - name: sample-subnet1
+              - name: sample-subnet2
+              - name: sample-subnet2
+        references:
+          - dependsOn:
+              apiVersion: ec2.aws.upbound.io/v1beta1
+              kind: Subnet
+              name: bar
+          - dependsOn:
+              apiVersion: ec2.aws.upbound.io/v1beta1
+              kind: Subnet
+              name: bar
+          - dependsOn:
+              apiVersion: ec2.aws.upbound.io/v1beta1
+              kind: Subnet
+              name: bar
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[0].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[1].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[2].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-3"
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet-group"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRefs[0].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-1"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRefs[1].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-2"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.subnetIdRefs[2].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-public-subnet-3"
+
+    - name: rds-instance
+      base:
+        apiVersion: rds.aws.upbound.io/v1beta1
+        kind: Instance
+        spec:
+          forProvider:
+            allocatedStorage: 20
+            autoGeneratePassword: true
+            autoMinorVersionUpgrade: true
+            engine: postgres
+            engineVersion: "13.7"
+            instanceClass: db.t3.large
+            passwordSecretRef:
+              key: password
+              name: dbinstance
+              namespace: crossplane-system
+            publiclyAccessible: true
+            region: eu-west-3
+            skipFinalSnapshot: true
+            username: adminuser
+            dbSubnetGroupNameRef:
+              name: rds-subnet-group
+#            vpcSecurityGroupIdSelector:
+#              matchLabels:
+#                owner: team
+            vpcSecurityGroupIdRefs:
+              - name: sg
+          writeConnectionSecretToRef:
+            name: example-dbinstance-out
+            namespace: crossplane-system
+          references:
+            - dependsOn:
+                apiVersion: rds.aws.upbound.io/v1beta1
+                kind: SubnetGroup
+                name: bar
+            - dependsOn:
+                apiVersion: ec2.aws.upbound.io/v1beta1
+                kind: SecurityGroup
+                name: bar
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[0].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet-group"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[1].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-db-instance"
+#        - fromFieldPath: spec.name
+#          toFieldPath: spec.vpcSecurityGroupIdSelector.matchLabels.owner
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.vpcSecurityGroupIdRefs[0].name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-sg"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.dbSubnetGroupNameRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-subnet-group"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.writeConnectionSecretToRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-dbinstance-conn"
