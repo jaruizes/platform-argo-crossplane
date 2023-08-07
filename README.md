@@ -323,18 +323,19 @@ Let's see them in more detail
 
 We have to create an application to keep synchronized crossplane resources between the platform git repository and the control plane cluster. This app is listening for changes in "https://github.com/jaruizes/platform-argo-crossplane/platform-gitops-repositories/crossplane-resources" . So, if we add more crossplane composites or update what exists, ArgoCD applies those changes to the main kubernetes cluster. 
 
-If you click in this app, you can see that two objects are managed by ArgoCD:
+
+
+If you click in this app, you can see that the objects in "platform-gitops-repositories/crossplane-resources" are managed by ArgoCD:
+
+
 
 ![crossplane_initial_composite](doc/pictures/crossplane_initial_composite.jpg)
 
-Those objects are:
-
-- EKS Composition, defined in "*crossplane/resources/aws/composite/eks/eks-composition.yaml*"
-- EKS Composite Resource Definition, defined in "*crossplane/resources/aws/composite/eks/eks-definition.yaml*"
 
 
+ArgoCD has installed those objects in the cluster and keeps them synchronized with the repository. 
 
-So, ArgoCD has installed those objects in the cluster and keeps them synchronized with the repository. We can check it executing this command:
+We can also check it directly against the cluster, executing this command:
 
 ```bash
 kubectl get Composition -n crossplane-system
@@ -345,8 +346,9 @@ kubectl get Composition -n crossplane-system
 We'll see the composition installed:
 
 ```bash
-NAME               XR-KIND            XR-APIVERSION             AGE
-customk8scluster   customk8scluster   jaruiz.crossplane.io/v1   7m2s
+NAME            XR-KIND         XR-APIVERSION             AGE
+platformbase    platformbase    jaruiz.crossplane.io/v1   10m
+platformtools   platformtools   jaruiz.crossplane.io/v1   10m
 ```
 
 
@@ -354,7 +356,7 @@ customk8scluster   customk8scluster   jaruiz.crossplane.io/v1   7m2s
 And if we execute:
 
 ```bash
-kubectl get CompositeResourceDefinition
+kubectl get CompositeResourceDefinition -n crossplane-system
 ```
 
 
@@ -362,44 +364,61 @@ kubectl get CompositeResourceDefinition
 we'll see the composite definition installed:
 
 ```bash
-NAME                                     ESTABLISHED   OFFERED   AGE
-customk8sclusters.jaruiz.crossplane.io   True          True      9m3s
+NAME                                  ESTABLISHED   OFFERED   AGE
+platformsbase.jaruiz.crossplane.io    True          True      11m
+platformstools.jaruiz.crossplane.io   True          True      11m
 ```
-
-
 
 
 
 #### ArgoCD App: **teams-claims**
 
-This application is listening for changes in "https://github.com/jaruizes/platform-argo-crossplane/teams" . So, a team wants to get a K8s cluster, the team will push a file containing the K8s claim in that path, ArgoCD will apply that change to the main kubernetes cluster and Crossplain will create the new cluster
+This application is listening for changes in "https://github.com/jaruizes/platform-argo-crossplane/platform-gitops-repositories/claims" . So, a team wants to get a K8s cluster, the team will push a file containing the K8s claim in that path, ArgoCD will apply that change to the main kubernetes cluster and Crossplain will create the new cluster
 
-If we click to see the details of the app, we'll see that there is no objects there. That is because we haven't requested any claim (that means that we haven't performed any push to "https://github.com/jaruizes/platform-argo-crossplane/teams")
+If we click to see the details of the app, we'll see that there is no objects there. That is because we haven't requested any claim (that means that we haven't performed any push to "https://github.com/jaruizes/platform-argo-crossplane/platform-gitops-repositories/claims")
+
+
 
 ![argocd_inital_teams_claims](doc/pictures/argocd_inital_teams_claims.jpg)
 
 
 
-### Claiming an EKS
 
-Now it's the moment to create a claim. We are going to request to create a new EKS cluster called "k8s-team-x". We have to push a new file to "https://github.com/jaruizes/platform-argo-crossplane/teams".
 
-The claim file has the following structure (there is an example in "*crossplane/claim-example/k8s-claim.yaml*":
+### Creating the IDP
+
+Now it's time to create the IDP using the control plane cluster. As we said before, we've divided it into three steps:
+
+![steps](doc/pictures/steps.jpg)
+
+In the following steps, we are going to push three claims to "https://github.com/jaruizes/platform-argo-crossplane/platform-gitops-repositories/claims" in order to create the IDP
+
+
+
+#### Platform base
+
+Now it's the moment to create a claim. You can find claim examples in the folder "claims-example" 
+
+So, we copy the file "claims-example/platformbase-claim.yaml" to the folder "platform-gitops-repositories/claims" and call it "products-platform-base-claim.yaml", for instance. 
+
+So, if we assume that we are going to create the base platform for the products team, the claim file will have the following content:
 
 ```yaml
 apiVersion: jaruiz.crossplane.io/v1
-kind: customk8sclusterclaim
+kind: platformbaseclaim
 metadata:
-  name: k8s-team-x
+  name: products-base-platform
   labels:
-    cluster-owner: team-x
+    cluster-owner: products-team
 spec:
-  name: k8s-team-x
+  name: products
 ```
 
 
 
-So, we create a new file called, for instance, "team-x-eks-claim.yaml", with that content, and push it to the repository:
+As you can see, in this claim we only can set the name of the team. In our case, we call it "products". 
+
+Now, we push this file to the repository:
 
 ![eks-claim-team-x](doc/pictures/eks-claim-team-x.jpg)
 
