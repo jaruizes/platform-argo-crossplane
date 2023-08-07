@@ -11,6 +11,8 @@ spec:
     repoURL: https://github.com/jaruizes/platform-argo-crossplane.git
     targetRevision: HEAD
     path: ./platform-gitops-repositories/cicd
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: cicd
