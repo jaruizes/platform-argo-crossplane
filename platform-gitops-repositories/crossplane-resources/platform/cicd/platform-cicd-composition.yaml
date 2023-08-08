@@ -78,6 +78,70 @@ spec:
             - type: string
               string:
                 fmt: "%s-github-provider-conf"
+
+    - name: team-example-argocd-repository
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                name: platform-argo-crossplane-claims.git
+                namespace: argocd
+                labels:
+                  argocd.argoproj.io/secret-type: repository
+              stringData:
+                type: git
+                username: jaruizes
+          providerConfigRef:
+            name: main-kubernetes-provider-conf
+          references:
+            - dependsOn:
+                apiVersion: repo.github.upbound.io/v1alpha1
+                kind: Repository
+                name: bar
+            - patchesFrom:
+                apiVersion: v1
+                kind: Secret
+                name: gitlab-credentials
+                namespace: crossplane-system
+                fieldPath: data.token
+              toFieldPath: data.password
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-team-argocd-repository"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[0].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-github-project"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-team-repository"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
+          transforms:
+            - type: string
+              string:
+                fmt: "https://github.com/jaruizes/%s"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-kubernetes-provider-conf"
+
     - name: team-example-argocd-app
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
@@ -105,6 +169,11 @@ spec:
                     selfHeal: true
           providerConfigRef:
             name: main-kubernetes-provider-conf
+          references:
+            - dependsOn:
+                apiVersion: v1
+                kind: Secret
+                name: bar
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
@@ -112,6 +181,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-argocd-app"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[0].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-team-argocd-repository"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
