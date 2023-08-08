@@ -106,7 +106,7 @@ spec:
             - patchesFrom:
                 apiVersion: v1
                 kind: Secret
-                name: gitlab-credentials
+                name: github-credentials
                 namespace: crossplane-system
                 fieldPath: data.token
               toFieldPath: data.password
