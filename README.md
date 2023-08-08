@@ -524,6 +524,25 @@ Now, if we go to Products ArgoCD url, we'll see the platform tools applications 
 
 
 
+#### Platform CI/CD
+
+Now, we are going to automate the creation of:
+
+- Two repositories: one for code with an example and one for deployment manifests
+- A simple CI/CD that builds, packages and deploys the code to the Kubernetes cluster 
+
+
+
+In this PoC we are going to use 
+
+
+
+
+
+
+
+
+
 ## Removing the environment
 
 We have to perform two tasks:

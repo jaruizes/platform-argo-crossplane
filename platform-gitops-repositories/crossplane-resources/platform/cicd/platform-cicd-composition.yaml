@@ -1,0 +1,132 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: cicd-team
+  labels:
+    group: platform
+spec:
+  compositeTypeRef:
+    apiVersion: jaruiz.crossplane.io/v1
+    kind: platformcicd
+  resources:
+    - name: main-kubernetes-provider-conf
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: ProviderConfig
+        spec:
+          credentials:
+            source: InjectedIdentity
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-kubernetes-provider-conf"
+      readinessChecks:
+        - type: None
+    - name: github-provider-conf
+      base:
+        apiVersion: github.upbound.io/v1beta1
+        kind: ProviderConfig
+        metadata:
+          name: default
+        spec:
+          credentials:
+            secretRef:
+              key: token
+              name: github-credentials
+              namespace: crossplane-system
+            source: Secret
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-github-provider-conf"
+      readinessChecks:
+        - type: None
+    - name: team-github-project
+      base:
+        apiVersion: repo.github.upbound.io/v1alpha1
+        kind: Repository
+        spec:
+          forProvider:
+            template:
+              - repository: "https://github.com/jaruizes/platform-argo-crossplane_project_template"
+                owner: jaruizes
+            visibility: public
+          providerConfigRef:
+            name: default
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-github-project"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.description
+          transforms:
+            - type: string
+              string:
+                fmt: "Example project for team %s"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-github-provider-conf"
+    - name: team-example-argocd-app
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Application
+              metadata:
+                namespace: argocd
+              spec:
+                project: default
+                source:
+                  path: './gitops/manifests'
+                  targetRevision: HEAD
+                destination:
+                  server: https://kubernetes.default.svc
+                  namespace: apps
+                syncPolicy:
+                  syncOptions:
+                    - CreateNamespace=true
+                  automated:
+                    prune: true
+                    selfHeal: true
+          providerConfigRef:
+            name: main-kubernetes-provider-conf
+      patches:
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-argocd-app"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-app"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
+          transforms:
+            - type: string
+              string:
+                fmt: "https://github.com/jaruizes/%s"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-kubernetes-provider-conf"

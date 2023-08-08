@@ -3,7 +3,7 @@ set -e
 
 AWS_ACCESS_KEY_ID=$1
 AWS_SECRET_ACCESS_KEY=$2
-GITLAB_TOKEN=$3
+GIT_TOKEN=$3
 
 installArgoCD() {
   kubectl create namespace argocd
@@ -22,12 +22,12 @@ installCrossplane() {
 installProviders() {
   kubectl apply -f control-plane/crossplane/providers/aws-provider.yaml -n crossplane-system
   sleep 10
-  kubectl apply -f crossplane/providers/k8s-provider.yaml -n crossplane-system
+  kubectl apply -f control-plane/crossplane/providers/k8s-provider.yaml -n crossplane-system
   sleep 10
-  kubectl apply -f crossplane/providers/helm-provider.yaml -n crossplane-system
+  kubectl apply -f control-plane/crossplane/providers/helm-provider.yaml -n crossplane-system
   sleep 10
-  kubectl apply -f crossplane/providers/gitlab-provider.yaml -n crossplane-system
-  kubectl create secret generic gitlab-credentials -n crossplane-system --from-literal=token="$GITLAB_TOKEN"
+  kubectl apply -f control-plane/crossplane/providers/github-provider.yaml -n crossplane-system
+  kubectl create secret generic github-credentials -n crossplane-system --from-literal=token="$GIT_TOKEN"
   sleep 300
 }
 
@@ -41,7 +41,7 @@ createSecretAWSCredentials() {
 }
 
 configAWSProviderToUseAWSCredentials() {
-  kubectl apply -f crossplane/providers/aws-provider-config.yaml -n crossplane-system
+  kubectl apply -f control-plane/crossplane/providers/aws-provider-config.yaml -n crossplane-system
 }
 
 configureArgoCDApps() {
@@ -53,8 +53,8 @@ createTeamsNamespace() {
   kubectl create namespace teams
 }
 
-setupGitlabProvider() {
-  kubectl create secret generic gitlab-credentials -n crossplane-system --from-literal=token="$GITLAB_TOKEN"
+setupGitProvider() {
+  kubectl create secret generic gitlab-credentials -n crossplane-system --from-literal=token="$GIT_TOKEN"
   kubectl apply -f crossplane/providers/gitlab-provider.yaml -n crossplane-system
 #  sleep 120
 #  kubectl apply -f crossplane/providers/gitlab-provider-config.yaml -n crossplane-system | true
@@ -62,11 +62,6 @@ setupGitlabProvider() {
 }
 
 configureK8sProviderSA() {
-#  kubectl apply -f crossplane/providers/k8s-provider.yaml -n crossplane-system
-#  sleep 10
-#  kubectl apply -f crossplane/providers/helm-provider.yaml -n crossplane-system
-#  sleep 300
-
   SA=$(kubectl -n crossplane-system get sa -o name | grep provider-kubernetes | sed -e 's|serviceaccount\/|crossplane-system:|g')
   kubectl create clusterrolebinding provider-kubernetes-admin-binding --clusterrole cluster-admin --serviceaccount="${SA}"
 }
@@ -75,11 +70,15 @@ configureKubectl() {
   aws eks --region eu-west-3 update-kubeconfig --name crossplane-poc-cluster
 }
 
-setupCrossplane() {
-  installCrossplane
-  installProviders
+configureAWSProvider() {
   createSecretAWSCredentials
   configAWSProviderToUseAWSCredentials
+}
+
+setupCrossplane() {
+#  installCrossplane
+  installProviders
+  configureAWSProvider
 }
 
 showInfo() {
@@ -100,11 +99,9 @@ showInfo() {
 
 setup() {
   configureKubectl
-  createTeamsNamespace
-  installArgoCD
+#  createTeamsNamespace
+#  installArgoCD
   setupCrossplane
-#  configureArgoCDApps
-#  setupGitlabProvider
   configureK8sProviderSA
   showInfo
 }

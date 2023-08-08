@@ -1,0 +1,11 @@
+apiVersion: github.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    secretRef:
+      key: credentials
+      name: example-creds
+      namespace: crossplane-system
+    source: Secret
