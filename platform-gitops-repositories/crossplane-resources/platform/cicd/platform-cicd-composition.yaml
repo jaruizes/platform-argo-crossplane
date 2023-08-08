@@ -174,6 +174,7 @@ spec:
                 apiVersion: v1
                 kind: Secret
                 name: bar
+                namespace: argocd
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
