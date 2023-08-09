@@ -53,10 +53,9 @@ spec:
         kind: Repository
         spec:
           forProvider:
-            name: my-first-repo-crossplane
-#            template:
-#              - repository: "https://github.com/jaruizes/platform-argo-crossplane_project_template"
-#                owner: jaruizes
+            template:
+              - repository: "https://github.com/jaruizes/platform-argo-crossplane_project_template"
+                owner: jaruizes
             visibility: public
           providerConfigRef:
             name: default
@@ -135,7 +134,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/%s.git"
+                fmt: "https://github.com/jaruizes/%s-github-repository.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
@@ -200,7 +199,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/%s.git"
+                fmt: "https://github.com/jaruizes/%s-github-repository.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
