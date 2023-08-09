@@ -108,7 +108,7 @@ spec:
                 kind: Secret
                 name: github-credentials
                 namespace: crossplane-system
-                fieldPath: data.credentials.token
+                fieldPath: data.credentials.password
               toFieldPath: data.password
       patches:
         - fromFieldPath: spec.name
