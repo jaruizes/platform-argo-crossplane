@@ -67,12 +67,6 @@ spec:
               string:
                 fmt: "%s-github-project"
         - fromFieldPath: spec.name
-          toFieldPath: spec.forProvider.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-github-project"
-        - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.description
           transforms:
             - type: string
@@ -114,7 +108,7 @@ spec:
                 kind: Secret
                 name: github-credentials
                 namespace: crossplane-system
-                fieldPath: credentials.password
+                fieldPath: data.token
               toFieldPath: data.password
       patches:
         - fromFieldPath: spec.name
