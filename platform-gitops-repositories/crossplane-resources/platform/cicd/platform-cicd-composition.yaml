@@ -79,7 +79,7 @@ spec:
               string:
                 fmt: "%s-github-provider-conf"
 
-    - name: team-example-argocd-repository
+    - name: team-github-argocd-repository
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
         kind: Object
@@ -108,7 +108,7 @@ spec:
                 kind: Secret
                 name: github-credentials
                 namespace: crossplane-system
-                fieldPath: data.token
+                fieldPath: data.token.token
               toFieldPath: data.password
       patches:
         - fromFieldPath: spec.name
@@ -134,7 +134,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/%s"
+                fmt: "https://github.com/jaruizes/%s.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
