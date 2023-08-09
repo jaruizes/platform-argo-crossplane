@@ -51,6 +51,8 @@ spec:
       base:
         apiVersion: repo.github.upbound.io/v1alpha1
         kind: Repository
+        metadata:
+          name: hello-provider-github
         spec:
           forProvider:
 #            template:
@@ -60,12 +62,12 @@ spec:
           providerConfigRef:
             name: default
       patches:
-        - fromFieldPath: spec.name
-          toFieldPath: metadata.name
-          transforms:
-            - type: string
-              string:
-                fmt: "%s-github-project"
+#        - fromFieldPath: spec.name
+#          toFieldPath: metadata.name
+#          transforms:
+#            - type: string
+#              string:
+#                fmt: "%s-github-project"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.description
           transforms:
@@ -122,7 +124,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-github-project"
+                fmt: "hello-provider-github"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
@@ -134,7 +136,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/%s.git"
+                fmt: "https://github.com/jaruizes/hello-provider-github.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
@@ -199,7 +201,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/%s"
+                fmt: "https://github.com/jaruizes/hello-provider-github.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
