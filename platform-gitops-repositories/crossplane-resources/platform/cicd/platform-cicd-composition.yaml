@@ -78,6 +78,9 @@ spec:
             - type: string
               string:
                 fmt: "%s-github-provider-conf"
+      readinessChecks:
+        - type: NonEmpty
+          fieldPath: status.atProvider.repoId
 
     - name: team-github-argocd-repository
       base:
