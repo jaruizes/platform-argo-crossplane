@@ -53,15 +53,21 @@ spec:
         kind: Repository
         spec:
           forProvider:
-            template:
-              - repository: "https://github.com/jaruizes/platform-argo-crossplane_project_template"
-                owner: jaruizes
+#            template:
+#              - repository: "https://github.com/jaruizes/platform-argo-crossplane_project_template"
+#                owner: jaruizes
             visibility: public
           providerConfigRef:
             name: default
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-github-project"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.name
           transforms:
             - type: string
               string:
@@ -108,7 +114,7 @@ spec:
                 kind: Secret
                 name: github-credentials
                 namespace: crossplane-system
-                fieldPath: data.credentials.password
+                fieldPath: credentials.password
               toFieldPath: data.password
       patches:
         - fromFieldPath: spec.name
