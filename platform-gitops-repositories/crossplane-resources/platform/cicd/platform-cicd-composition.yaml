@@ -51,10 +51,9 @@ spec:
       base:
         apiVersion: repo.github.upbound.io/v1alpha1
         kind: Repository
-        metadata:
-          name: hello-provider-github
         spec:
           forProvider:
+            name: my-first-repo-crossplane
 #            template:
 #              - repository: "https://github.com/jaruizes/platform-argo-crossplane_project_template"
 #                owner: jaruizes
@@ -67,7 +66,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "hello-provider-github"
+                fmt: "%s-github-repository"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.description
           transforms:
@@ -124,7 +123,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "hello-provider-github"
+                fmt: "%s-github-repository"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
@@ -136,7 +135,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/hello-provider-github.git"
+                fmt: "https://github.com/jaruizes/%s.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
@@ -201,7 +200,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/hello-provider-github.git"
+                fmt: "https://github.com/jaruizes/%s.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
