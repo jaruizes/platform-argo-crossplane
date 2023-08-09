@@ -54,7 +54,7 @@ spec:
         spec:
           forProvider:
             template:
-              - repository: "https://github.com/jaruizes/platform-argo-crossplane_project_template"
+              - repository: "platform-argo-crossplane_project_template"
                 owner: jaruizes
             visibility: public
           providerConfigRef:
