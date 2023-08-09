@@ -89,7 +89,6 @@ spec:
               apiVersion: v1
               kind: Secret
               metadata:
-                name: platform-argo-crossplane-claims.git
                 namespace: argocd
                 labels:
                   argocd.argoproj.io/secret-type: repository
@@ -128,7 +127,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-team-repository"
+                fmt: "%s-team-repository.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.spec.source.repoURL
           transforms:
