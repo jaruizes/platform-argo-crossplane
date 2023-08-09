@@ -132,7 +132,7 @@ spec:
               string:
                 fmt: "%s-team-repository.git"
         - fromFieldPath: spec.name
-          toFieldPath: spec.forProvider.manifest.spec.source.repoURL
+          toFieldPath: spec.forProvider.stringData.url
           transforms:
             - type: string
               string:
