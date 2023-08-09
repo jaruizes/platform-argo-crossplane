@@ -118,7 +118,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-team-argocd-repository"
+                fmt: "%s-argocd-repository"
         - fromFieldPath: spec.name
           toFieldPath: spec.references[0].dependsOn.name
           transforms:
@@ -130,7 +130,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-team-repository.git"
+                fmt: "%s-argocd-repository"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.stringData.url
           transforms:
@@ -189,7 +189,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-team-argocd-repository"
+                fmt: "%s-argocd-repository"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
