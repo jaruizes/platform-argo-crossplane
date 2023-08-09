@@ -177,6 +177,10 @@ spec:
                 kind: Secret
                 name: bar
                 namespace: argocd
+            - dependsOn:
+                apiVersion: repo.github.upbound.io/v1alpha1
+                kind: Repository
+                name: bar
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
@@ -190,6 +194,12 @@ spec:
             - type: string
               string:
                 fmt: "%s-argocd-repository"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[1].dependsOn.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-github-repository"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
