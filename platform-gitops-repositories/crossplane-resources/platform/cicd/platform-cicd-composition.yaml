@@ -62,12 +62,12 @@ spec:
           providerConfigRef:
             name: default
       patches:
-#        - fromFieldPath: spec.name
-#          toFieldPath: metadata.name
-#          transforms:
-#            - type: string
-#              string:
-#                fmt: "%s-github-project"
+        - fromFieldPath: spec.name
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "hello-provider-github"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.description
           transforms:
