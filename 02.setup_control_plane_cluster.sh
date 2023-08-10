@@ -27,8 +27,7 @@ installProviders() {
   kubectl apply -f control-plane/crossplane/providers/helm-provider.yaml -n crossplane-system
   sleep 10
   kubectl apply -f control-plane/crossplane/providers/github-provider.yaml -n crossplane-system
-  kubectl create secret generic github-credentials -n crossplane-system --from-literal=token="$GIT_TOKEN"
-  kubectl create secret generic test-secret3 --from-literal=token="$GIT_TOKEN" --from-literal=credentials='{"owner": "jaruizes", "token": "'"$GIT_TOKEN"'"}' -n crossplane-system
+  kubectl create secret generic github-credentials --from-literal=token="$GIT_TOKEN" --from-literal=credentials='{"owner": "jaruizes", "token": "'"$GIT_TOKEN"'"}' -n crossplane-system
   sleep 300
 }
 
@@ -100,8 +99,8 @@ showInfo() {
 
 setup() {
   configureKubectl
-#  createTeamsNamespace
-#  installArgoCD
+  createTeamsNamespace
+  installArgoCD
   setupCrossplane
   configureK8sProviderSA
   showInfo

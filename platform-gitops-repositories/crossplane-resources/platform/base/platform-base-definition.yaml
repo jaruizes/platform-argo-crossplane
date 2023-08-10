@@ -7,11 +7,11 @@ spec:
     - kubeconfig
   group: jaruiz.crossplane.io
   names:
-    kind: platformbase
-    plural: platformsbase
+    kind: PlatformInfra
+    plural: platformsinfra
   claimNames:
-    kind: platformbaseclaim
-    plural: platformbaseclaims
+    kind: PlatformInfraClaim
+    plural: platforminfraclaims
   versions:
     - name: v1
       served: true

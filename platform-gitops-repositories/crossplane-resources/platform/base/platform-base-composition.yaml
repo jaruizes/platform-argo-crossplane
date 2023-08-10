@@ -12,7 +12,7 @@ spec:
         - fromFieldPath: metadata.labels
   compositeTypeRef:
     apiVersion: jaruiz.crossplane.io/v1
-    kind: platformbase
+    kind: PlatformInfra
   resources:
     #### EKS CLUSTER & CLUSTER AUTH ####
     - name: eks-cluster
