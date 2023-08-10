@@ -3,7 +3,7 @@ kind: Composition
 metadata:
   name: platformtools
   labels:
-    group: onboarding
+    group: platform
 spec:
   patchSets:
     - name: metadata
@@ -11,7 +11,7 @@ spec:
         - fromFieldPath: metadata.labels
   compositeTypeRef:
     apiVersion: jaruiz.crossplane.io/v1
-    kind: platformtools
+    kind: PlatformTools
   resources:
     - name: k8s-team-provider-config
       base:

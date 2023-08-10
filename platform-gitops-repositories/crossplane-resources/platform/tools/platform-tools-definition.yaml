@@ -7,10 +7,10 @@ spec:
     - kubeconfig
   group: jaruiz.crossplane.io
   names:
-    kind: platformtools
+    kind: PlatformTools
     plural: platformstools
   claimNames:
-    kind: platformtoolsclaim
+    kind: PlatformToolsclaim
     plural: platformstoolsclaims
   versions:
     - name: v1
