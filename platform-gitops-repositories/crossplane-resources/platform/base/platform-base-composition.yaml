@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: platformbase
+  name: PlatformInfra
   labels:
     provider: aws
     cluster: eks
