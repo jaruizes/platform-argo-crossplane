@@ -10,7 +10,7 @@ spec:
     kind: PlatformTools
     plural: platformstools
   claimNames:
-    kind: PlatformToolsclaim
+    kind: PlatformToolsClaim
     plural: platformstoolsclaims
   versions:
     - name: v1
