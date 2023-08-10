@@ -7,10 +7,10 @@ spec:
     - kubeconfig
   group: jaruiz.crossplane.io
   names:
-    kind: platformcicd
+    kind: PlatformCICD
     plural: platformscicd
   claimNames:
-    kind: platformcicdclaim
+    kind: PlatformCICDClaim
     plural: platformcicdclaims
   versions:
     - name: v1

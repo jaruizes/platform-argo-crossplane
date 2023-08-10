@@ -1,28 +1,38 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: cicd-team
+  name: cicd
   labels:
     group: platform
 spec:
   compositeTypeRef:
     apiVersion: jaruiz.crossplane.io/v1
-    kind: platformcicd
+    kind: PlatformCICD
   resources:
-    - name: main-kubernetes-provider-conf
+    - name: k8s-team-provider-config
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
         kind: ProviderConfig
         spec:
           credentials:
-            source: InjectedIdentity
+            secretRef:
+              key: kubeconfig
+              name: cluster-config
+              namespace: crossplane-system
+            source: Secret
       patches:
         - fromFieldPath: spec.name
           toFieldPath: metadata.name
           transforms:
             - type: string
               string:
-                fmt: "%s-kubernetes-provider-conf"
+                fmt: "%s-kubernetes-provider-config"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.credentials.secretRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-conn"
       readinessChecks:
         - type: None
     - name: github-provider-conf
