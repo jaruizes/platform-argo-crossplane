@@ -45,7 +45,7 @@ spec:
           credentials:
             secretRef:
               key: credentials
-              name: test-secret
+              name: github-credentials
               namespace: crossplane-system
             source: Secret
       patches:
@@ -118,7 +118,7 @@ spec:
             - patchesFrom:
                 apiVersion: v1
                 kind: Secret
-                name: test-secret
+                name: github-credentials
                 namespace: crossplane-system
                 fieldPath: data.token
               toFieldPath: data.password
