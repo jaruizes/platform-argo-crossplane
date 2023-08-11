@@ -198,12 +198,6 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-argocd-repository"
-        - fromFieldPath: spec.name
-          toFieldPath: spec.references[1].dependsOn.name
-          transforms:
-            - type: string
-              string:
                 fmt: "%s-github-repository"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.metadata.name
