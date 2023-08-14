@@ -228,7 +228,7 @@ This k8s cluster will be our Control Plane. The next step is to configure ArgoCD
 Once the main cluster is up and running, we have to install and configure [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) and [Crossplane](https://www.crossplane.io/). To do this, just execute the following script:
 
 ```bash
-sh 02.setup_control_plane_cluster.sh <AWS_ACCESS_KEY_ID> <AWS_SECRET_ACCESS_KEY> <GITLAB_TOKEN>
+sh 02.setup_control_plane_cluster.sh <AWS_ACCESS_KEY_ID> <AWS_SECRET_ACCESS_KEY> <GITHUB_TOKEN>
 ```
 
 

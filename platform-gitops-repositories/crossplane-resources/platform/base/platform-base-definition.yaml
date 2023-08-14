@@ -25,28 +25,7 @@ spec:
               properties:
                 name:
                   type: string
-                  description: Name of this Cluster that other objects will use to refer to it.
+                  description: Name of the team requested the platform.
               required:
                 - name
-#            status:
-#              type: object
-#              properties:
-#                clusterName:
-#                  description: The name of the cluster
-#                  type: string
-#                controlPlaneStatus:
-#                  description: The status of the control plane
-#                  type: string
-#                nodePoolStatus:
-#                  description: The status of the node pool
-#                  type: string
-#      additionalPrinterColumns:
-#        - name: clusterName
-#          type: string
-#          jsonPath: ".status.clusterName"
-#        - name: controlPlane
-#          type: string
-#          jsonPath: ".status.controlPlaneStatus"
-#        - name: nodePool
-#          type: string
-#          jsonPath: ".status.nodePoolStatus"
+

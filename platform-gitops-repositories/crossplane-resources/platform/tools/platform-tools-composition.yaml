@@ -5,13 +5,13 @@ metadata:
   labels:
     group: platform
 spec:
+  compositeTypeRef:
+    apiVersion: jaruiz.crossplane.io/v1
+    kind: PlatformTools
   patchSets:
     - name: metadata
       patches:
         - fromFieldPath: metadata.labels
-  compositeTypeRef:
-    apiVersion: jaruiz.crossplane.io/v1
-    kind: PlatformTools
   resources:
     - name: k8s-team-provider-config
       base:
