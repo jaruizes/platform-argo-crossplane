@@ -8,6 +8,6 @@ metadata:
 
 nodeGroups:
   - name: ng-1
-    instanceType: m5.large
+    instanceType: m5.xlarge
     desiredCapacity: 2
     volumeSize: 80

@@ -210,7 +210,7 @@ nodeGroups:
 The following script encapsulates the cluster creation:
 
 ```bash
-sh create-cluster.sh
+sh 01.create-cluster.sh
 ```
 
 
@@ -219,7 +219,7 @@ Once the creation is finished, we have an empty EKS:
 
 ![empty_eks](doc/pictures/empty_eks.jpg)
 
-The next step is to configure ArgoCD and Crossplane.
+This k8s cluster will be our Control Plane. The next step is to configure ArgoCD and Crossplane.
 
 
 
@@ -228,12 +228,12 @@ The next step is to configure ArgoCD and Crossplane.
 Once the main cluster is up and running, we have to install and configure [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) and [Crossplane](https://www.crossplane.io/). To do this, just execute the following script:
 
 ```bash
-sh setup_control_plane_cluster.sh <AWS_ACCESS_KEY_ID> <AWS_SECRET_ACCESS_KEY> <GITLAB_TOKEN>
+sh 02.setup_control_plane_cluster.sh <AWS_ACCESS_KEY_ID> <AWS_SECRET_ACCESS_KEY> <GITLAB_TOKEN>
 ```
 
 
 
-When the script ends, we'll see the url to access to ArgoCD and the credentials. Something like this:
+This script takes about 5-6 minutes, so be patient. When the script ends, we'll see the url to access to ArgoCD and the credentials. Something like this:
 
 ```bash
 ARGOCD URL: https://a8628e104aa7549c3a979c27185934f3-369920353.eu-west-2.elb.amazonaws.com:80/
@@ -242,7 +242,7 @@ ARGOCD Credentials: admin/FkmHYXTwAWT33eFZ
 
 
 
-Now, we have our control plane cluster ready:
+Now, we have our control plane cluster ready with ArgoCD and Crossplane installed:
 
 ![step1](doc/pictures/setup_control_plane_cluster.jpg)
 
@@ -260,14 +260,14 @@ In the next steps, we'll create two applications: crossplane-resources and claim
 
 ### ArgoCD Applications
 
-Now, we need to create two ArgoCD applications
+Now, we need to create two ArgoCD applications in order to manage our platform:
 
-- crossplane-resources
-- claims
+- crossplane-resources, to manage and synchronize the resources that the platform provides (EKS, RDS,...etc)
+- claims, to manage and synchronize the requests of the platform users
 
 
 
-With these two applications, our control plane cluster will be ready to manage claims
+With these two applications, our control plane cluster will be ready to manage claims and create the resources requested
 
 ![step1](doc/pictures/step1.jpg)
 
@@ -276,7 +276,7 @@ With these two applications, our control plane cluster will be ready to manage c
 To create the applications, just execute the following script:
 
 ```bash
-sh setup_control_plane_argocd_apps.sh
+sh 03.setup_control_plane_argocd_apps.sh
 ```
 
 
@@ -285,7 +285,9 @@ Once the script finishes, if we enter to the ArgoCD url we'll see these two appl
 
 ![argocd_apps](doc/pictures/argocd_apps.jpg)
 
-Let's see them in more detail
+
+
+Let's see them in more detail!
 
 
 
@@ -524,20 +526,27 @@ Now, if we go to Products ArgoCD url, we'll see the platform tools applications 
 
 
 
-#### Platform CI/CD
+#### Platform CI/CD and example project
 
-Now, we are going to automate the creation of:
+Now, in this PoC, we've decide that the next step is to provide a repository with an example of application and a simple CI/CD process. 
 
-- Two repositories: one for code with an example and one for deployment manifests
-- A simple CI/CD that builds, packages and deploys the code to the Kubernetes cluster 
+In this PoC we are going to use a Github template to create teams repository. This repository is: https://github.com/jaruizes/platform-argo-crossplane_project_template . It will be possible to use other Git provider as Gitlab, for instance.
 
-
-
-In this PoC we are going to use 
+This is a PoC and we've only implemented one template but, in a real environment, we could have a template for each kind of artifact used in our company. Teams could specify in the claim which kind of artifact they need.
 
 
 
+We are also going to use Github and ArgoCD actions to implements a simple CI/CD process:
 
+![cicd](doc/pictures/cicd.jpg)
+
+
+
+As you can see in the image, there is a file (build.yaml) implementing the CI pipeline by Github Actions and the CD part is implemented using ArgoCD app. The CI part builds the artifact and upload the new image to Image Registry and then, changes the application deployment file and push it to the Gitops repo. The ArgoCD App pulls those changes and applies them to the K8s team cluster.
+
+For simplicity, in this PoC we are used the same repository for application code and Gitops. Gitops files are in the path "/gitops/manifest" .
+
+The important thing here is that we are used Github Actions and ArgoCD to implement the CI/CD pipeline but, in a real environment, we could provide other CI/CD pipeline to the teams.
 
 
 
@@ -552,9 +561,9 @@ We have to perform two tasks:
 
 
 
-### Removing the claim
+### Removing the claims
 
-If we delete the file from the repository and we push the change:
+If we delete the claim files from the repository (path "platform-gitops-repositories/claims") and we push the changes:
 
 ![deleted_claim_team-x](doc/pictures/deleted_claim_team-x.jpg)
 
@@ -590,7 +599,7 @@ We also can check AWS Console:
 Once the team cluster is deleted we can destroy the main cluster executing:
 
 ```bash
-sh delete-cluster.sh
+sh 04.delete-cluster.sh
 ```
 
 
@@ -603,3 +612,4 @@ sh delete-cluster.sh
 
 - Crossplane testing: how to test compositions, definitions, etc...
 - A dev portal like Backstage
+- Why Crossplane (instead of Terraform)?
