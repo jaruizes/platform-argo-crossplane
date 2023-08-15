@@ -1,8 +1,0 @@
-apiVersion: jaruiz.crossplane.io/v1
-kind: PlatformCICDClaim
-metadata:
-  name: products-cicd-platform
-  labels:
-    cluster-owner: products-team
-spec:
-  name: products
