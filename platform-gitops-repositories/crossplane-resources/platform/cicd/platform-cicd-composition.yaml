@@ -9,6 +9,20 @@ spec:
     apiVersion: jaruiz.crossplane.io/v1
     kind: PlatformCICD
   resources:
+    - name: team-ecr-repository
+      base:
+        apiVersion: ecr.aws.upbound.io/v1beta1
+        kind: Repository
+        spec:
+          forProvider:
+            region: eu-west-3
+        patches:
+          - fromFieldPath: spec.name
+            toFieldPath: metadata.name
+            transforms:
+              - type: string
+                string:
+                  fmt: "%s"
     - name: k8s-team-provider-config
       base:
         apiVersion: kubernetes.crossplane.io/v1alpha1
