@@ -181,7 +181,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-github-repository"
+                fmt: "%s"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.description
           transforms:
@@ -240,7 +240,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-github-repository"
+                fmt: "%s"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
@@ -252,7 +252,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/%s-github-repository.git"
+                fmt: "https://github.com/jaruizes/%s.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
@@ -304,7 +304,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "%s-github-repository"
+                fmt: "%s"
         - fromFieldPath: spec.name
           toFieldPath: spec.forProvider.manifest.metadata.name
           transforms:
@@ -316,7 +316,7 @@ spec:
           transforms:
             - type: string
               string:
-                fmt: "https://github.com/jaruizes/%s-github-repository.git"
+                fmt: "https://github.com/jaruizes/%s.git"
         - fromFieldPath: spec.name
           toFieldPath: spec.providerConfigRef.name
           transforms:
