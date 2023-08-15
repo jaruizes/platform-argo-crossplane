@@ -94,74 +94,74 @@ spec:
                 fmt: "%s-kubernetes-provider-config"
 
     - name: database-connection-details
-        base:
-          apiVersion: kubernetes.crossplane.io/v1alpha1
-          kind: Object
-          spec:
-            forProvider:
-              manifest:
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        kind: Object
+        spec:
+          forProvider:
+            manifest:
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                namespace: connections
+          providerConfigRef:
+            name: main-kubernetes-provider-conf
+          references:
+            - patchesFrom:
                 apiVersion: v1
                 kind: Secret
-                metadata:
-                  namespace: connections
-            providerConfigRef:
-              name: main-kubernetes-provider-conf
-            references:
-              - patchesFrom:
-                  apiVersion: v1
-                  kind: Secret
-                  namespace: crossplane-system
-                  fieldPath: data.address
-                toFieldPath: data.address
-              - patchesFrom:
-                  apiVersion: v1
-                  kind: Secret
-                  namespace: crossplane-system
-                  fieldPath: data.password
-                toFieldPath: data.password
-              - patchesFrom:
-                  apiVersion: v1
-                  kind: Secret
-                  namespace: crossplane-system
-                  fieldPath: data.username
-                toFieldPath: data.username
-        patches:
-          - fromFieldPath: spec.name
-            toFieldPath: metadata.name
-            transforms:
-              - type: string
-                string:
-                  fmt: "%s-dbinstance-conn"
-          - fromFieldPath: spec.name
-            toFieldPath: spec.references[0].patchesFrom.name
-            transforms:
-              - type: string
-                string:
-                  fmt: "%s-dbinstance-conn"
-           - fromFieldPath: spec.name
-            toFieldPath: spec.references[1].patchesFrom.name
-            transforms:
-              - type: string
-                string:
-                  fmt: "%s-dbinstance-conn"
-           - fromFieldPath: spec.name
-            toFieldPath: spec.references[2].patchesFrom.name
-            transforms:
-              - type: string
-                string:
-                  fmt: "%s-dbinstance-conn"
-          - fromFieldPath: spec.name
-            toFieldPath: spec.forProvider.manifest.metadata.name
-            transforms:
-              - type: string
-                string:
-                  fmt: "%s-dbinstance-conn"
+                namespace: crossplane-system
+                fieldPath: data.address
+              toFieldPath: data.address
+            - patchesFrom:
+                apiVersion: v1
+                kind: Secret
+                namespace: crossplane-system
+                fieldPath: data.password
+              toFieldPath: data.password
+            - patchesFrom:
+                apiVersion: v1
+                kind: Secret
+                namespace: crossplane-system
+                fieldPath: data.username
+              toFieldPath: data.username
+      patches:
         - fromFieldPath: spec.name
-            toFieldPath: spec.providerConfigRef.name
-            transforms:
-              - type: string
-                string:
-                  fmt: "%s-kubernetes-provider-config"
+          toFieldPath: metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-dbinstance-conn"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.references[0].patchesFrom.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-dbinstance-conn"
+         - fromFieldPath: spec.name
+          toFieldPath: spec.references[1].patchesFrom.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-dbinstance-conn"
+         - fromFieldPath: spec.name
+          toFieldPath: spec.references[2].patchesFrom.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-dbinstance-conn"
+        - fromFieldPath: spec.name
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-dbinstance-conn"
+      - fromFieldPath: spec.name
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-kubernetes-provider-config"
 
     - name: team-github-project
       base:
