@@ -138,13 +138,13 @@ spec:
             - type: string
               string:
                 fmt: "%s-dbinstance-conn"
-         - fromFieldPath: spec.name
+        - fromFieldPath: spec.name
           toFieldPath: spec.references[1].patchesFrom.name
           transforms:
             - type: string
               string:
                 fmt: "%s-dbinstance-conn"
-         - fromFieldPath: spec.name
+        - fromFieldPath: spec.name
           toFieldPath: spec.references[2].patchesFrom.name
           transforms:
             - type: string
@@ -157,11 +157,11 @@ spec:
               string:
                 fmt: "%s-dbinstance-conn"
         - fromFieldPath: spec.name
-            toFieldPath: spec.providerConfigRef.name
-            transforms:
-              - type: string
-                string:
-                  fmt: "%s-kubernetes-provider-config"
+          toFieldPath: spec.providerConfigRef.name
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-kubernetes-provider-config"
 
     - name: team-github-project
       base:
