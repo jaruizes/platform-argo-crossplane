@@ -1,0 +1,66 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: claim-platform-tools-template
+  title: Template to claim platform tools
+  description: Platform Tools claim form
+spec:
+  owner: user:guest
+  type: claim
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Rellena los siguientes datos
+      required:
+        - team
+      properties:
+        team:
+          title: Nombre del equipo
+          type: string
+          description: Indica el nombre del equipo que realiza la petición
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          team: ${{ parameters.team }}
+
+    # This step publishes the contents of the working directory to GitHub.
+    # https://github.com/jaruizes/backstage-test
+    - id: claim-pr
+      name: Claim Pull-Request
+      action: publish:github:pull-request
+      input:
+        title: Platform base claim (${{ parameters.team }})
+        description: ${{ parameters.description }}
+        repoUrl: github.com?repo=backstage-test&owner=jaruizes
+        branchName: claims-pr
+
+
+
+    # The final step is to register our new component in the catalog.
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        catalogInfoUrl: http://github.com/jaruizes/backstage-test/platform-gitops-repositories/claims/${{values.team}}/platform-base/catalog-info.yaml
+
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: Pull Request URL
+        url: ${{ steps['claim-pr'].output.remoteUrl }}
+      - title: Abrir en catálogo
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

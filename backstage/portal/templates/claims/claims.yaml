@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: claims
+  description: A collection of all claim templates
+spec:
+  targets:
+    - ./platform-base/platform-base-template.yaml
+    - ./platform-tools/platform-tools-template.yaml
