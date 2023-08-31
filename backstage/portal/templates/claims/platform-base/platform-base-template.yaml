@@ -44,7 +44,7 @@ spec:
       input:
         title: Platform base claim (${{ parameters.team }})
         description: Solicitud de plataforma base por el equipo ${{ parameters.team }}
-        repoUrl: github.com?repo=backstage-test&owner=jaruizes
+        repoUrl: github.com?repo=platform-argo-crossplane&owner=jaruizes
         branchName: claims-pr
 
 
@@ -54,7 +54,7 @@ spec:
       name: Register
       action: catalog:register
       input:
-        catalogInfoUrl: http://github.com/jaruizes/backstage-test/tree/claims-pr/platform-gitops-repositories/claims/${{ parameters.team }}/platform-base/catalog-info.yaml
+        catalogInfoUrl: http://github.com/jaruizes/platform-argo-crossplane/tree/claims-pr/platform-gitops-repositories/claims/${{ parameters.team }}/platform-base/catalog-info.yaml
         optional: true
 
   # Outputs are displayed to the user after a successful execution of the template.

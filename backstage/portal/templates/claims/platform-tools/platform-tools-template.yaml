@@ -44,7 +44,7 @@ spec:
       input:
         title: Platform base claim (${{ parameters.team }})
         description: ${{ parameters.description }}
-        repoUrl: github.com?repo=backstage-test&owner=jaruizes
+        repoUrl: github.com?repo=platform-argo-crossplane&owner=jaruizes
         branchName: claims-pr
 
 
