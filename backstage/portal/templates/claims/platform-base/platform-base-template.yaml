@@ -54,7 +54,7 @@ spec:
       name: Register
       action: catalog:register
       input:
-        catalogInfoUrl: http://github.com/jaruizes/platform-argo-crossplane/tree/claims-pr/platform-gitops-repositories/claims/${{ parameters.team }}/platform-base/catalog-info.yaml
+        catalogInfoUrl: http://github.com/jaruizes/platform-argo-crossplane/tree/claims-pr/backstage-repository/catalog/generated/claims/${{ parameters.team }}/platform-base/catalog-info.yaml
         optional: true
 
   # Outputs are displayed to the user after a successful execution of the template.

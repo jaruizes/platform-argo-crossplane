@@ -54,7 +54,7 @@ spec:
       name: Register
       action: catalog:register
       input:
-        catalogInfoUrl: http://github.com/jaruizes/backstage-test/platform-gitops-repositories/claims/${{values.team}}/platform-base/catalog-info.yaml
+        catalogInfoUrl: http://github.com/jaruizes/backstage-test/backstage-repository/catalog/generated/claims/${{values.team}}/platform-base/catalog-info.yaml
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:
