@@ -107,6 +107,11 @@ catalog:
      rules:
       - allow: [Template]
 
+#   - type: url
+#       target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/apis/example/example-api.yaml
+#       rules:
+#         - allow: [API]
+
   ## Uncomment these lines to add an example org
   # - type: url
   #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/portal/acme-corp.yaml

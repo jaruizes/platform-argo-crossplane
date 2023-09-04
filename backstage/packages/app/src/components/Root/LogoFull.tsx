@@ -1,18 +1,20 @@
 import React from 'react';
-// import { makeStyles } from '@material-ui/core';
-//
-// const useStyles = makeStyles({
-//   svg: {
-//     width: 'auto',
-//     height: 30,
-//   },
-//   path: {
-//     fill: '#7df3e1',
-//   },
-// });
-// const LogoFull = () => {
-//   const classes = useStyles();
-//
+import MyCustomLogoFull from './logo/PRDG_logo_Horizontal_White.png';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles({
+  svg: {
+    width: 'auto',
+    height: 30,
+  },
+  path: {
+    fill: '#7df3e1',
+  },
+});
+const LogoFull = () => {
+  const classes = useStyles();
+  return <img className={classes.svg} src={MyCustomLogoFull} />;
+
 //   return (
 //     <svg
 //       className={classes.svg}
@@ -25,12 +27,6 @@ import React from 'react';
 //       />
 //     </svg>
 //   );
-// };
-
-import MyCustomLogoFull from './logo/PRDG_logo_Horizontal_White.png';
-
-const LogoFull = () => {
-  return <img src={MyCustomLogoFull} />;
 };
 
 export default LogoFull;
