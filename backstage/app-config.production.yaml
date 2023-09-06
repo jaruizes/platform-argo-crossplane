@@ -1,6 +1,6 @@
 app:
   title: Paradigma Devex Local
-  baseUrl: http://localhost:8081
+  baseUrl: https://localhost:8081
 
 organization:
   name: Paradigma Local
@@ -12,20 +12,20 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
-  baseUrl: http://localhost:7007
+  baseUrl: https://localhost:8081
   listen:
-    port: 7007
+    port: 8081
     # Uncomment the following host directive to bind to specific interfaces
     # host: 127.0.0.1
   csp:
     upgrade-insecure-requests: false
     connect-src: ["'self'", 'http:', 'https:']
-    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
-    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
-  cors:
-    origin: http://localhost:8081
-    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
-    credentials: true
+#    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+#    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+#  cors:
+#    origin: http://localhost:8081
+#    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+#    credentials: true
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
   database:
@@ -77,15 +77,43 @@ catalog:
   rules:
     - allow: [Component, System, API, Resource, Location]
   locations:
-   - type: file
-     target: ../../portal/entities.yaml
+  # Local example data, file locations are relative to the backend process, typically `packages/backend`
+  #    - type: file
+  #      target: ../../portal/entities.yaml
+  #
+  #    # Local example template
+  #    - type: file
+  #      target: ../../portal/templates/all.yaml
+  #      rules:
+  #        - allow: [Template]
+  #
+  #    # Local example organizational data
+  #    - type: file
+  #      target: ../../portal/org.yaml
+  #      rules:
+  #        - allow: [User, Group]
 
-   - type: file
-     target: ../../portal/org.yaml
+  ## Uncomment these lines to add more example data
+   - type: url
+     target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/entities.yaml
+
+   - type: url
+     target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/org.yaml
      rules:
        - allow: [User, Group]
 
-   - type: file
-     target: ../../portal/templates/all.yaml
+   - type: url
+     target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/templates/all.yaml
      rules:
       - allow: [Template]
+
+#   - type: url
+#       target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/apis/example/example-api.yaml
+#       rules:
+#         - allow: [API]
+
+  ## Uncomment these lines to add an example org
+  # - type: url
+  #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/portal/acme-corp.yaml
+  #   rules:
+  #     - allow: [User, Group]

@@ -1,17 +1,279 @@
 ---
-# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-user
-apiVersion: backstage.io/v1alpha1
-kind: User
-metadata:
-  name: guest
-spec:
-  memberOf: [guests]
----
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-group
 apiVersion: backstage.io/v1alpha1
 kind: Group
 metadata:
-  name: guests
+  name: et
+  title: Technological Strategy
+  description: The technological strategy unit
+spec:
+  type: business-unit
+  profile:
+    displayName: Technological Strategy
+    email: et@paradigmadigital.com
+    picture: https://fonts.gstatic.com/s/e/notoemoji/15.0/1f47d/32.png
+  children: [datia]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: datia
+  title: DatIA
+  description: The Datia team
 spec:
   type: team
+  profile:
+    displayName: DatIA
+    email: et@paradigmadigital.com
+  parent: et
+  members: [andrea, angel]
   children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: goodly
+  title: Goodly
+  description: The Goodly team
+spec:
+  type: team
+  profile:
+    displayName: Goodly
+    email: et@paradigmadigital.com
+  parent: et
+  members: [andresn, joseb, oscar, tomas, patricia]
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: cn
+  title: Cloud Native
+  description: The Cloud Native team
+spec:
+  type: team
+  profile:
+    displayName: Cloud Native
+    email: et@paradigmadigital.com
+  parent: et
+  members: [alba, carlos, javier, juanma, noe, ruben]
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: rt
+  title: Real Time
+  description: The Real Time team
+spec:
+  type: team
+  profile:
+    displayName: Real Time
+    email: et@paradigmadigital.com
+  parent: et
+  members: [jesus, casarrubios]
+  children: []
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-user
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: andrea
+spec:
+  profile:
+    displayName: Andrea
+    email: andrea@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/andrea.png
+  memberOf: [datia]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: angel
+  title: Angel
+spec:
+  profile:
+    displayName: Angel
+    email: angel@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/angel.png
+  memberOf: [datia]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: alba
+  title: Alba
+spec:
+  profile:
+    displayName: Alba
+    email: alba@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/alba.png
+  memberOf: [cn]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: andresn
+  title: Andrés N.
+spec:
+  profile:
+    displayName: Andrés N.
+    email: andresn@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/andresn.png
+  memberOf: [goodly]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: carlos
+  title: Carlos
+spec:
+  profile:
+    displayName: Carlos
+    email: carlos@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/carlos.png
+  memberOf: [cn]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: javier
+  title: Javier
+spec:
+  profile:
+    displayName: Javier
+    email: javier@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/javier.png
+  memberOf: [cn]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: jesus
+  title: Jesus
+spec:
+  profile:
+    displayName: Jesus
+    email: jesus@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/jesus.png
+  memberOf: [rt]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: casarrubios
+  title: Casarrubios
+spec:
+  profile:
+    displayName: Casarrubios
+    email: casarrubios@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/casarrubios.png
+  memberOf: [rt]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: joseb
+  title: José B.
+spec:
+  profile:
+    displayName: José B.
+    email: joseb@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/joseb.png
+  memberOf: [goodly]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: juanma
+  title: Juanma
+spec:
+  profile:
+    displayName: Juanma
+    email: juanma@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/juanma.png
+  memberOf: [cn]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: noe
+  title: Noe
+spec:
+  profile:
+    displayName: Noe
+    email: noe@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/noe.png
+  memberOf: [cn]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: oscar
+  title: Oscar
+spec:
+  profile:
+    displayName: Oscar
+    email: oscar@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/oscar.png
+  memberOf: [goodly]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: patricia
+  title: Patricia
+spec:
+  profile:
+    displayName: Patricia
+    email: patricia@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/patricia.png
+  memberOf: [goodly]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: ruben
+  title: Ruben
+spec:
+  profile:
+    displayName: Ruben
+    email: ruben@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/ruben.png
+  memberOf: [cn]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: tomas
+  title: Tomás
+spec:
+  profile:
+    displayName: Tomás
+    email: tomas@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/tomas.png
+  memberOf: [goodly]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: andresm
+  title: Andrés M.
+spec:
+  profile:
+    displayName: Andrés M.
+    email: andresm@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/andresm.png
+  memberOf: [et]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: alex
+  title: Alex
+spec:
+  profile:
+    displayName: Alex
+    email: alex@paradigmadigital.com
+    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/alex.png
+  memberOf: [et]

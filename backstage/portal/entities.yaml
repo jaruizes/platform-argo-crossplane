@@ -11,24 +11,24 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: example-website
+  name: website
 spec:
   type: website
   lifecycle: experimental
-  owner: guests
-  system: examples
-  providesApis: [example-grpc-api]
+  owner: products
+  system: products
+  providesApis: [products-grpc-api]
 ---
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: example-grpc-api
+  name: products-grpc-api
 spec:
   type: grpc
   lifecycle: experimental
-  owner: guests
-  system: examples
+  owner: products
+  system: products
   definition: |
     syntax = "proto3";
 

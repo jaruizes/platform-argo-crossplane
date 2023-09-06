@@ -4,5 +4,5 @@ metadata:
   name: platform-base-${{ values.team }}
 spec:
   type: claim
-  owner: user:guest
+  owner: user:${{ values.team }}
   lifecycle: experimental
