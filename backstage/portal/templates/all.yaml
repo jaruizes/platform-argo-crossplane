@@ -6,3 +6,16 @@ metadata:
 spec:
   targets:
     - ./claims/claims.yaml
+    - ./docs/template.yaml
+    # Node.js example template
+    - ./example-nodejs/template.yaml
+    # Node.js with RDS example template
+    - ./example-nodejs-rds/template.yaml
+    # Node.js with ESF example template
+    - ./example-nodejs-efs/template.yaml
+    # Simple python app template
+    - ./example-python-flask/template.yaml
+    # Springboot template
+    - ./example-springboot/template.yaml
+    # API Gateway & Lambda Serverless REST API template
+    - ./example-serverless-rest-api/template.yaml

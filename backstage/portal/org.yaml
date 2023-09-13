@@ -83,7 +83,7 @@ spec:
   profile:
     displayName: Andrea
     email: andrea@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/andrea.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/andrea.png
   memberOf: [datia]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -95,7 +95,7 @@ spec:
   profile:
     displayName: Angel
     email: angel@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/angel.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/angel.png
   memberOf: [datia]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -107,7 +107,7 @@ spec:
   profile:
     displayName: Alba
     email: alba@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/alba.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/alba.png
   memberOf: [cn]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -119,7 +119,7 @@ spec:
   profile:
     displayName: Andrés N.
     email: andresn@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/andresn.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/andresn.png
   memberOf: [goodly]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -131,7 +131,7 @@ spec:
   profile:
     displayName: Carlos
     email: carlos@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/carlos.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/carlos.png
   memberOf: [cn]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -143,7 +143,7 @@ spec:
   profile:
     displayName: Javier
     email: javier@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/javier.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/javier.png
   memberOf: [cn]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -155,7 +155,7 @@ spec:
   profile:
     displayName: Jesus
     email: jesus@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/jesus.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/jesus.png
   memberOf: [rt]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -167,7 +167,7 @@ spec:
   profile:
     displayName: Casarrubios
     email: casarrubios@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/casarrubios.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/casarrubios.png
   memberOf: [rt]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -179,7 +179,7 @@ spec:
   profile:
     displayName: José B.
     email: joseb@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/joseb.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/joseb.png
   memberOf: [goodly]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -191,7 +191,7 @@ spec:
   profile:
     displayName: Juanma
     email: juanma@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/juanma.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/juanma.png
   memberOf: [cn]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -203,7 +203,7 @@ spec:
   profile:
     displayName: Noe
     email: noe@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/noe.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/noe.png
   memberOf: [cn]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -215,7 +215,7 @@ spec:
   profile:
     displayName: Oscar
     email: oscar@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/oscar.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/oscar.png
   memberOf: [goodly]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -227,7 +227,7 @@ spec:
   profile:
     displayName: Patricia
     email: patricia@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/patricia.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/patricia.png
   memberOf: [goodly]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -239,7 +239,7 @@ spec:
   profile:
     displayName: Ruben
     email: ruben@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/ruben.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/ruben.png
   memberOf: [cn]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -251,7 +251,7 @@ spec:
   profile:
     displayName: Tomás
     email: tomas@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/tomas.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/tomas.png
   memberOf: [goodly]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -263,7 +263,7 @@ spec:
   profile:
     displayName: Andrés M.
     email: andresm@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/andresm.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/andresm.png
   memberOf: [et]
 ---
 apiVersion: backstage.io/v1alpha1
@@ -275,5 +275,5 @@ spec:
   profile:
     displayName: Alex
     email: alex@paradigmadigital.com
-    picture: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/images/icons/alex.png
+    picture: https://github.com/jaruizes/platform-argo-crossplane/raw/main/backstage/portal/images/icons/alex.png
   memberOf: [et]
