@@ -79,48 +79,6 @@ spec:
   # These steps are executed in the scaffolder backend, using data that we gathered
   # via the parameters above.
   steps:
-    - id: getComponentInfo
-      name: Get Component Info
-      action: baws:get-component-info
-      input:
-        componentName: ${{ parameters.component_id }}
-
-    - id: bawsGetAwsEnvProviders
-      name: Get AWS Environment Providers
-      action: baws:get-env-providers
-      input:
-        environmentRef: ${{ parameters.environment }}
-
-    - id: bawsGetSsmParams
-      name: Get parameter values
-      action: baws:get-ssm-parameters
-      input:
-        paramKeys:
-          - '/baws/domain'
-        envProviders: ${{ steps['bawsGetAwsEnvProviders'].output.envProviders }}
-
-    - id: createS3Bucket
-      name: Create an S3 bucket
-      action: baws:create-s3-bucket
-      input:
-        bucketName: ${{ steps['getComponentInfo'].output.kebabCaseComponentName }}-${{ steps['bawsGetAwsEnvProviders'].output.envShortName }}
-        envProviders: ${{ steps['bawsGetAwsEnvProviders'].output.envProviders }}
-        tags:
-          - Key: "aws-apps:${{ parameters.component_id }}"
-            Value: ${{ parameters.component_id }}
-
-    - id: createSecretManager
-      name: Create a Secret
-      action: baws:create-secret
-      input:
-        secretName: aws-apps-${{ (parameters.repoUrl | parseRepoUrl).repo | lower }}-access-token
-        region: ${{ steps['bawsGetAwsEnvProviders'].output.envProviders[0].region }}
-        accountId: ${{ steps['bawsGetAwsEnvProviders'].output.envProviders[0].accountId }}
-        description: "Gitlab repo access token"
-        tags:
-          - Key: "aws-apps:${{ parameters.component_id }}"
-            Value: ${{ parameters.component_id }}
-
     - id: fetchBase
       name: Fetch Base
       action: fetch:template
@@ -151,16 +109,6 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
         repoVisibility: internal
         defaultBranch: main
-
-    - id: createRepoToken
-      name: Create Repo Access Token
-      action: baws:createRepoAccessToken:gitlab
-      input:
-        repoUrl: ${{ parameters.repoUrl }}
-        projectId: ${{ steps['publish'].output.projectId}}
-        secretArn: ${{ steps['createSecretManager'].output.awsSecretArn }}
-        region: ${{ steps['bawsGetAwsEnvProviders'].output.envProviders[0].region }}
-        accountId: ${{ steps['bawsGetAwsEnvProviders'].output.envProviders[0].accountId }}
 
     # The final step is to register our new component in the catalog.
     - id: register

@@ -126,16 +126,6 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
         defaultBranch: main
         repoVisibility: internal
-    - id: createRepoToken
-      name: Create Repo Access Token
-      action: baws:createRepoAccessToken:gitlab
-      input:
-        repoUrl: ${{ parameters.repoUrl }}
-        projectId: ${{ steps['publish'].output.projectId}}
-        secretArn: ${{ steps['createSecretManager'].output.awsSecretArn }}
-        region: ${{ steps['bawsDeployECSBoilerplate'].output.region }}
-        accountId: ${{ steps['bawsDeployECSBoilerplate'].output.account }}
-    # The final step is to register our new component in the catalog.
     - id: register
       name: Register
       action: catalog:register

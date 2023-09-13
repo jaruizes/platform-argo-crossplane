@@ -136,54 +136,6 @@ spec:
   # via the parameters above.
   steps:
     # Each step executes an action, in this case one templates files into the working directory.
-    - id: bawsDeployRDSBoilerplate
-      name: Deploy RDS Boilerplate
-      action: baws:deploy-boilerplate
-      input:
-        boilerplateRepositories:
-          - aws_rds
-        inputParameters:
-          APP_SHORT_NAME: ${{ parameters.component_id}}
-          DB_NAME: ${{ parameters.db_name }}
-          RDS_ID: ${{ parameters.rds_resource_id }}
-          # DB_PARAMS:
-          # DB_ENGINE: # ${{ parameters.db_type }}
-          # DB_SIZE: # ${{ parameters.instance_size }}
-        environmentRef: ${{ parameters.environment }}
-        actionType: "Create Resource"
-    - id: bawsDeployECSBoilerplate
-      name: Deploy ECS Boilerplate
-      action: baws:deploy-boilerplate
-      input:
-        boilerplateRepositories:
-          - aws_ecs
-        inputParameters:
-          APP_SHORT_NAME: ${{ parameters.component_id}}
-          APP_ENV_PLAINTEXT:
-            PORT: "3001"
-            VAR1: "var1 value"
-          APP_ENV_SECRETS:
-            RDS_CREDS: "${{ steps['bawsDeployRDSBoilerplate'].output.cfnOutputs['baws-db-admin-secret-arn'] }}"
-        environmentRef: ${{ parameters.environment }}
-        actionType: "Create App"
-    # - id: debug
-    #   name: Debug Statement
-    #   action: debug:log
-    #   input:
-    #     message: |
-    #       rdsCfnOutputs: "${{ steps['bawsDeployRDSBoilerplate'].output.cfnOutputs | dump }}"
-    #       ecsCfnOutputs: "${{ steps['bawsDeployECSBoilerplate'].output.cfnOutputs | dump }}"
-    - id: createSecretManager
-      name: Create a Secret
-      action: baws:create-secret
-      input:
-        secretName: aws-apps-${{ (parameters.repoUrl | parseRepoUrl).repo | lower }}-access-token
-        region: ${{ steps['bawsDeployECSBoilerplate'].output.region }}
-        accountId: ${{ steps['bawsDeployECSBoilerplate'].output.account }}
-        description: "Gitlab repo access token"
-        tags:
-          - Key: "aws-apps:${{ parameters.component_id }}"
-            Value: ${{ parameters.component_id }}
     - id: fetchBase
       name: Fetch Base
       action: fetch:template
@@ -213,16 +165,6 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
         repoVisibility: internal
         defaultBranch: main
-    - id: createRepoToken
-      name: Create Repo Token
-      action: baws:createRepoAccessToken:gitlab
-      input:
-        repoUrl: ${{ parameters.repoUrl }}
-        projectId: ${{ steps['publish'].output.projectId }}
-        secretArn: ${{ steps['createSecretManager'].output.awsSecretArn }}
-        region: ${{ steps['bawsDeployECSBoilerplate'].output.region }}
-        accountId: ${{ steps['bawsDeployECSBoilerplate'].output.account }}
-    # The final step is to register our new component in the catalog.
     - id: registerApp
       name: Register Component
       action: catalog:register
