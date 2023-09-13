@@ -7,7 +7,7 @@ spec:
   targets:
     - ./claims/claims.yaml
     - ./docs-template/template.yaml
-#    - ./example-nodejs-rds/template.yaml
-#    - ./example-python-flask/template.yaml
-#    - ./example-springboot/template.yaml
-#    - ./example-serverless-rest-api/template.yaml
+    - ./example-nodejs-rds/template.yaml
+    - ./example-python-flask/template.yaml
+    - ./example-springboot/template.yaml
+    - ./example-serverless-rest-api/template.yaml
