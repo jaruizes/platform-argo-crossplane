@@ -6,7 +6,7 @@ metadata:
 spec:
   targets:
     - ./claims/claims.yaml
-    - ./docs/template.yaml
+#    - ./docs/template.yaml
 #    - ./example-nodejs-rds/template.yaml
 #    - ./example-python-flask/template.yaml
 #    - ./example-springboot/template.yaml
