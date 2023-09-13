@@ -26,7 +26,7 @@ metadata:
   annotations:
     backstage.io/techdocs-ref: url:https://github.com/benwilcock/where-for-dinner-techdocs/tanzu-developer-portal-system
 spec:
-  owner: group:tanzu-engineering
+  owner: user:guest
   domain: developer-portal
   profile:
     displayName: Tanzu Developer Portal
@@ -53,7 +53,7 @@ metadata:
       type: website
       icon: WebAsset
 spec:
-  owner: group:cncf
+  owner: user:guest
   profile:
     displayName: Backstage
 ---
@@ -86,7 +86,7 @@ spec:
   lifecycle: production
   providesApis:
     - cluster-api
-  owner: group:CNCF
+  owner: user:guest
   system: tanzu-developer-portal
   profile:
     displayName: Kubernetes
@@ -120,7 +120,7 @@ spec:
   lifecycle: production
   providesApis:
     - catalog-api
-  owner: group:CNCF
+  owner: user:guest
   system: backstage
   profile:
     displayName: Backstage
@@ -152,7 +152,7 @@ spec:
   lifecycle: production
   providesApis:
     - catalog-api
-  owner: group:cncf
+  owner: user:guest
   profile:
     displayName: Software Catalog
   dependsOn:
@@ -177,7 +177,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:cncf
+  owner: user:guest
   profile:
     displayName: API Docs
   dependsOn:
@@ -202,7 +202,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:cncf
+  owner: user:guest
   profile:
     displayName: Tech Docs
   dependsOn:
@@ -230,7 +230,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:cncf
+  owner: user:guest
   profile:
     displayName: Search
   dependsOn:
@@ -259,7 +259,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:tanzu-engineering
+  owner: user:guest
   system: tanzu-developer-portal
   profile:
     displayName: Application Accelerators
@@ -284,7 +284,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:tanzu-engineering
+  owner: user:guest
   system: tanzu-developer-portal
   profile:
     displayName: API Auto-registration
@@ -309,7 +309,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:tanzu-engineering
+  owner: user:guest
   system: tanzu-developer-portal
   profile:
     displayName: Runtime Resources
@@ -335,7 +335,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:tanzu-engineering
+  owner: user:guest
   system: tanzu-developer-portal
   profile:
     displayName: Application Live View
@@ -360,7 +360,7 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: group:tanzu-engineering
+  owner: user:guest
   system: tanzu-developer-portal
   profile:
     displayName: Tanzu Developer Portal Configurator
@@ -389,7 +389,7 @@ metadata:
 spec:
   type: openapi
   lifecycle: production
-  owner: group:CNCF
+  owner: user:guest
   definition:
     $text: https://github.com/backstage/backstage/blob/master/plugins/catalog-backend/src/schema/openapi.yaml
 ---
@@ -413,7 +413,7 @@ metadata:
 spec:
   type: openapi
   lifecycle: production
-  owner: group:CNCF
+  owner: user:guest
   definition:
     $text: https://github.com/kubernetes/kubernetes/blob/master/api/openapi-spec/swagger.json
 ---
