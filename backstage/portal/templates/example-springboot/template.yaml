@@ -112,11 +112,6 @@ spec:
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           owner: ${{ parameters.owner }}
           aws_environment: ${{ parameters.environment }}
-          aws_region: ${{ steps['bawsDeployECSBoilerplate'].output.region }}
-          aws_account: ${{ steps['bawsDeployECSBoilerplate'].output.account }}
-          aws_pipeline_arn: ${{ steps['bawsDeployECSBoilerplate'].output.executionArn }}
-          aws_bp_outputs: ${{ steps['bawsDeployECSBoilerplate'].output.cfnOutputs }}
-          aws_secret_repo_arn: ${{ steps['createSecretManager'].output.awsSecretArn }}
     # This step publishes the contents of the working directory to GitLab.
     - id: publish
       name: Publish

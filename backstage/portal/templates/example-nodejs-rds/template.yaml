@@ -141,22 +141,7 @@ spec:
       action: fetch:template
       input:
         url: ./content
-        values:
-          component_id: ${{ parameters.component_id }}
-          description: ${{ parameters.description }}
-          aws_environment: ${{ parameters.environment }}
-          aws_region: ${{ steps['bawsDeployECSBoilerplate'].output.region }}
-          aws_account: ${{ steps['bawsDeployECSBoilerplate'].output.account }}
-          aws_ecs_bp_outputs: ${{ steps['bawsDeployECSBoilerplate'].output.cfnOutputs }}
-          rds_resource_id: ${{ parameters.rds_resource_id }}
-          rds_description: ${{ parameters.rds_description }}
-          db_name: ${{ parameters.db_name }}
-          db_object_name: ${{ parameters.db_object_name }}
-          owner: ${{ parameters.owner }}
-          aws_pipeline_arn: ${{ steps['bawsDeployECSBoilerplate'].output.executionArn }}
-          aws_rds_bp_outputs: ${{ steps['bawsDeployRDSBoilerplate'].output.cfnOutputs }}
-          app_port: "3002"
-          aws_secret_repo_arn: ${{ steps['createSecretManager'].output.awsSecretArn }}
+
     # This step publishes the contents of the working directory to GitLab.
     - id: publish
       name: Publish
@@ -185,7 +170,6 @@ spec:
         url: ${{ steps['publish'].output.remoteUrl }}
       - title: Open application component in catalog
         icon: catalog
-        entityRef: ${{ steps['registerApp'].output.entityRef }}
       - title: Open RDS resource in catalog
         icon: resource
-        entityRef: ${{ steps['registerRds'].output.entityRef }}
+
