@@ -12,7 +12,7 @@ metadata:
     - rds
     - aws
 spec:
-  owner: group:admins
+  owner: user:guest
   type: service
 
   # These parameters are used to generate the input form in the frontend, and are

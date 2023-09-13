@@ -22,7 +22,7 @@ metadata:
     - title: Serverless Application Model (SAM)
       url: https://aws.amazon.com/serverless/sam/
 spec:
-  owner: group:admins
+  owner: user:guest
   type: service
 
   # These parameters are used to generate the input form in the frontend, and are
