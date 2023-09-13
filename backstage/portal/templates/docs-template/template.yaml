@@ -10,7 +10,7 @@ metadata:
     - mkdocs
 spec:
   owner: user:guest
-  type: claim
+  type: documentation
 
   parameters:
     - title: Fill in some steps
