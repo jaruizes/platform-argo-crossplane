@@ -1,9 +1,9 @@
 app:
-  title: Paradigma Devex Local
+  title: Paradigma Devex
   baseUrl: http://localhost:8081
 
 organization:
-  name: Paradigma Local
+  name: Paradigma
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -57,11 +57,13 @@ proxy:
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
 techdocs:
-  builder: 'local' # Alternatives - 'external'
+  builder: 'local'
   generator:
-    runIn: 'docker' # Alternatives - 'local'
+    runIn: 'local' # Alternatives - 'local'
   publisher:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+#    awsS3:
+#      bucketName: 'devex-poc-backstage-docs'
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
@@ -69,23 +71,30 @@ auth:
 
 scaffolder:
 # see https://backstage.io/docs/features/software-templates/configuration for software template options
+openai:
+  apiKey: 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
 
 catalog:
   import:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, Domain, System, API, Resource, Location]
   locations:
-   - type: file
-     target: ../../portal/entities.yaml
+    - type: url
+      target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/entities.yaml
 
-   - type: file
-     target: ../../portal/org.yaml
-     rules:
-       - allow: [User, Group]
+    - type: url
+      target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/org.yaml
+      rules:
+        - allow: [User, Group]
 
-   - type: file
-     target: ../../portal/templates/all.yaml
-     rules:
-      - allow: [Template]
+    - type: url
+      target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/templates/all.yaml
+      rules:
+        - allow: [Template]
+
+    - type: url
+      target: https://github.com/jaruizes/backstage-test/blob/main/catalog-info.yaml
+
+

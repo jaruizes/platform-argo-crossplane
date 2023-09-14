@@ -1,9 +1,9 @@
 app:
-  title: Paradigma Devex Local
-  baseUrl: https://localhost:8081
+  title: Paradigma Devex
+  baseUrl: http://localhost:8081
 
 organization:
-  name: Paradigma Local
+  name: Paradigma
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -12,7 +12,7 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
-  baseUrl: https://localhost:8081
+  baseUrl: http://localhost:8081
   listen:
     port: 8081
     # Uncomment the following host directive to bind to specific interfaces
@@ -20,8 +20,8 @@ backend:
   csp:
     upgrade-insecure-requests: false
     connect-src: ["'self'", 'http:', 'https:']
-#    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
-#    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
 #  cors:
 #    origin: http://localhost:8081
 #    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
@@ -57,11 +57,13 @@ proxy:
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
 techdocs:
-  builder: 'local' # Alternatives - 'external'
+  builder: 'local'
   generator:
-    runIn: 'docker' # Alternatives - 'local'
+    runIn: 'local' # Alternatives - 'local'
   publisher:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+#    awsS3:
+#      bucketName: 'devex-poc-backstage-docs'
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
@@ -75,45 +77,22 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, Domain, System, API, Resource, Location]
   locations:
-  # Local example data, file locations are relative to the backend process, typically `packages/backend`
-  #    - type: file
-  #      target: ../../portal/entities.yaml
-  #
-  #    # Local example template
-  #    - type: file
-  #      target: ../../portal/templates/all.yaml
-  #      rules:
-  #        - allow: [Template]
-  #
-  #    # Local example organizational data
-  #    - type: file
-  #      target: ../../portal/org.yaml
-  #      rules:
-  #        - allow: [User, Group]
+    - type: url
+      target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/entities.yaml
 
-  ## Uncomment these lines to add more example data
-   - type: url
-     target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/entities.yaml
+    - type: url
+      target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/org.yaml
+      rules:
+        - allow: [User, Group]
 
-   - type: url
-     target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/org.yaml
-     rules:
-       - allow: [User, Group]
+    - type: url
+      target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/templates/all.yaml
+      rules:
+        - allow: [Template]
 
-   - type: url
-     target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/templates/all.yaml
-     rules:
-      - allow: [Template]
+    - type: url
+      target: https://github.com/jaruizes/backstage-test/blob/main/catalog-info.yaml
 
-#   - type: url
-#       target: https://github.com/jaruizes/platform-argo-crossplane/tree/main/backstage/portal/apis/example/example-api.yaml
-#       rules:
-#         - allow: [API]
 
-  ## Uncomment these lines to add an example org
-  # - type: url
-  #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/portal/acme-corp.yaml
-  #   rules:
-  #     - allow: [User, Group]

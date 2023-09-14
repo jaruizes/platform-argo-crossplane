@@ -34,7 +34,7 @@ import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 
-import { BackstageTheme, lightTheme } from '@backstage/theme';
+import {BackstageTheme, darkTheme, lightTheme} from '@backstage/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 /**
@@ -43,6 +43,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
  * overridden along with the classes key those components use.
  */
 import { BackstageOverrides } from '@backstage/core-components';
+import { HomepageCompositionRoot } from '@backstage/plugin-home';
+import { HomePage } from './components/home/HomePage';
+import { ChatGPTFrontendPage } from '@enfuse/chatgpt-plugin-frontend';
 
 export const createCustomThemeOverrides = (
     theme: BackstageTheme,
@@ -53,7 +56,26 @@ export const createCustomThemeOverrides = (
                 backgroundColor: '#FE4645',
                 backgroundImage: ''
             },
-        },
+            title: {
+                color: `white`
+            }
+        }
+    };
+};
+
+export const createCustomThemeOverridesHome = (
+    theme: BackstageTheme,
+): BackstageOverrides => {
+    return {
+        BackstageHeader: {
+            header: {
+                backgroundColor: '#FE4645',
+                backgroundImage: ''
+            },
+            title: {
+                color: `white`
+            }
+        }
     };
 };
 
@@ -64,6 +86,15 @@ const customTheme: BackstageTheme = {
         ...lightTheme.overrides,
         // These are your custom overrides, either to `material-ui` or Backstage components.
         ...createCustomThemeOverrides(lightTheme),
+    },
+};
+const customThemeHome: BackstageTheme = {
+    ...darkTheme,
+    overrides: {
+        // These are the overrides that Backstage applies to `material-ui` components
+        ...darkTheme.overrides,
+        // These are your custom overrides, either to `material-ui` or Backstage components.
+        ...createCustomThemeOverridesHome(darkTheme),
     },
 };
 
@@ -89,7 +120,7 @@ const app = createApp({
     themes: [{
         id: 'my-theme',
         title: 'My Custom Theme',
-        variant: 'light',
+        variant: 'dark',
         Provider: ({ children }) => (
             <ThemeProvider theme={customTheme}>
                 <CssBaseline>{children}</CssBaseline>
@@ -100,7 +131,9 @@ const app = createApp({
 
 const routes = (
   <FlatRoutes>
-    <Route path="/" element={<Navigate to="catalog" />} />
+    <Route path="/" element={<HomepageCompositionRoot />}>
+      <HomePage />
+    </Route>
     <Route path="/catalog" element={<CatalogIndexPage />} />
     <Route
       path="/catalog/:namespace/:kind/:name"
@@ -109,6 +142,7 @@ const routes = (
       {entityPage}
     </Route>
     <Route path="/docs" element={<TechDocsIndexPage />} />
+    <Route path="/chatgpt" element={<ChatGPTFrontendPage />} />
     <Route
       path="/docs/:namespace/:kind/:name/*"
       element={<TechDocsReaderPage />}
