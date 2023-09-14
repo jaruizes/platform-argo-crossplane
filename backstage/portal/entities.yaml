@@ -1,4 +1,34 @@
 ###############################
+# Domains
+###############################
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: sales
+  title: Sales
+  description: Sales Domain
+spec:
+  owner: sales-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: strategy
+  title: Strategy
+  description: Strategy Domain
+spec:
+  owner: group:et
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: marketing
+  title: Marketing
+  description: Marketing Domain
+spec:
+  owner: marketing-team
+---
+###############################
 # SYSTEMS
 ###############################
 apiVersion: backstage.io/v1alpha1
