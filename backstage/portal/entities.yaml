@@ -454,5 +454,5 @@ spec:
   lifecycle: production
   owner: user:guest
   definition:
-    $text: https://raw.githubusercontent.com/jaruizes/eda-practical-design/main/contracts/clients-service.yaml
+    $text: https://github.com/jaruizes/eda-practical-design/blob/main/contracts/clients-service.yaml
 ---
