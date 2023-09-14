@@ -13,20 +13,47 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Domain
 metadata:
-  name: strategy
-  title: Strategy
-  description: Strategy Domain
-spec:
-  owner: group:et
----
-apiVersion: backstage.io/v1alpha1
-kind: Domain
-metadata:
   name: marketing
   title: Marketing
   description: Marketing Domain
 spec:
   owner: marketing-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: orders
+  title: Orders
+  description: Orders Domain
+spec:
+  owner: orders-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: products
+  title: Products
+  description: Products Domain
+spec:
+  owner: products-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: shipping
+  title: Shipping
+  description: Shipping Domain
+spec:
+  owner: shipping-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: customers
+  title: Customers
+  description: Customers Domain
+spec:
+  owner: customers-team
 ---
 ###############################
 # SYSTEMS
@@ -34,32 +61,21 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
-  name: tanzu-developer-portal
-  description: "A portal for creating, sharing, discovering, and managing your organization's code. Based on Spotify Backstage."
+  name: crm
+  title: Salesforce
+  description: "CRM System"
   tags:
     - backstage
     - tanzu
     - portal
   links:
-    - url: https://youtu.be/GAzKCQO8Vt0
-      title: Backstage In The VMware Tanzu Developer Portal Developer Portal (YouTube)
-      type: video
-      icon: YouTube
-    - url: https://via.vmw.com/tdp
-      title: Tanzu Developer Portal Homepage
-      type: website
-      icon: WebAsset
-    - url: https://backstage.io/docs/overview/what-is-backstage/
-      title: What is Backstage?
-      type: website
-      icon: WebAsset
-  annotations:
-    backstage.io/techdocs-ref: url:https://github.com/benwilcock/where-for-dinner-techdocs/tanzu-developer-portal-system
+    - url: https://www.salesforce.com/es/campaign/sem/salesforce-products/?d=70130000000tIs5&utm_source=google&utm_medium=sem&utm_campaign=es_alllobcon&utm_content=_70130000000tIs5&soc=Google-salesforce-products&ef_id=CjwKCAjw3oqoBhAjEiwA_UaLtkxdgxjamp95SmNMbZNX7DRwQH4OKfD-avSoNaCCtbXHhMmDMXJVfhoCAO8QAvD_BwE:G:s&s_kwcid=AL!7501!3!643339992617!e!!g!!salesforce%20crm&&mkwid=s&pcrid=643339992617&pkw=salesforce%20crm&pmt=e&pdv=c&gad=1&gclid=CjwKCAjw3oqoBhAjEiwA_UaLtkxdgxjamp95SmNMbZNX7DRwQH4OKfD-avSoNaCCtbXHhMmDMXJVfhoCAO8QAvD_BwE&gclsrc=aw.ds
+      title: Salesforce
 spec:
   owner: user:guest
-  domain: developer-portal
+  domain: customers
   profile:
-    displayName: Tanzu Developer Portal
+    displayName: Salesforce CRM
 ---
 
 apiVersion: backstage.io/v1alpha1
