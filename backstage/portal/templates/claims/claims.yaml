@@ -7,3 +7,4 @@ spec:
   targets:
     - ./platform-base/platform-base-template.yaml
     - ./platform-tools/platform-tools-template.yaml
+    - ./platform-tools/platform-cicd-template.yaml

@@ -2,9 +2,9 @@ apiVersion: scaffolder.backstage.io/v1beta3
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
-  name: claim-platform-tools-template
-  title: Claim platform tools
-  description: Platform Tools claim form
+  name: claim-platform-cicd-template
+  title: Claim platform cicd and example app
+  description: Platform CICD and example app claim form
 spec:
   owner: user:guest
   type: claim
@@ -54,7 +54,7 @@ spec:
       name: Register
       action: catalog:register
       input:
-        catalogInfoUrl: http://github.com/jaruizes/backstage-test/backstage-repository/catalog/generated/claims/${{values.team}}/platform-tools/catalog-info.yaml
+        catalogInfoUrl: http://github.com/jaruizes/backstage-test/backstage-repository/catalog/generated/claims/${{values.team}}/platform-cicd/catalog-info.yaml
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:

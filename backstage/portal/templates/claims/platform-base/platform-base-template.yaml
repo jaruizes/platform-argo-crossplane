@@ -3,14 +3,12 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: claim-platform-base-template
-  title: Template to claim platform base
+  title: Claim platform base
   description: Platform Base claim form
 spec:
   owner: user:guest
   type: claim
 
-  # These parameters are used to generate the input form in the frontend, and are
-  # used to gather input data for the execution of the template.
   parameters:
     - title: Rellena los siguientes datos
       required:
@@ -24,10 +22,7 @@ spec:
           ui:options:
             rows: 5
 
-  # These steps are executed in the scaffolder backend, using data that we gathered
-  # via the parameters above.
   steps:
-    # Each step executes an action, in this case one templates files into the working directory.
     - id: fetch-base
       name: Fetch Base
       action: fetch:template
@@ -36,8 +31,6 @@ spec:
         values:
           team: ${{ parameters.team }}
 
-    # This step publishes the contents of the working directory to GitHub.
-    # https://github.com/jaruizes/backstage-test
     - id: claim-pr
       name: Claim Pull-Request
       action: publish:github:pull-request
@@ -47,9 +40,6 @@ spec:
         repoUrl: github.com?repo=platform-argo-crossplane&owner=jaruizes
         branchName: claims-pr
 
-
-
-    # The final step is to register our new component in the catalog.
     - id: register
       name: Register
       action: catalog:register
@@ -57,7 +47,6 @@ spec:
         catalogInfoUrl: http://github.com/jaruizes/platform-argo-crossplane/tree/claims-pr/backstage-repository/catalog/generated/claims/${{ parameters.team }}/platform-base/catalog-info.yaml
         optional: true
 
-  # Outputs are displayed to the user after a successful execution of the template.
   output:
     links:
       - title: Pull Request URL
