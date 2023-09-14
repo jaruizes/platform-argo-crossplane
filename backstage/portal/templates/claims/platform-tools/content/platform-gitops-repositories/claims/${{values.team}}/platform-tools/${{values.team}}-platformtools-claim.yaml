@@ -1,7 +1,7 @@
 apiVersion: jaruiz.crossplane.io/v1
 kind: PlatformToolsClaim
 metadata:
-  name: ${{ values.team }}-platform-infra
+  name: ${{ values.team }}-platform-tools
   labels:
     cluster-owner: ${{ values.team }}
 spec:
