@@ -1,0 +1,8 @@
+apiVersion: jaruiz.crossplane.io/v1
+kind: PlatformToolsClaim
+metadata:
+  name: products-platform-infra
+  labels:
+    cluster-owner: products
+spec:
+  name: products
