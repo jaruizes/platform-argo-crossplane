@@ -298,23 +298,23 @@ export const HomePage = () => {
                         </Grid>
                         <Grid container item xs={12}>
                             <Grid item xs={12} md={6}>
-                                <InfoCard title="Golden Paths: Arquitectura">
+                                <InfoCard title="Arquitectura">
                                     <ArchFolderList/>
                                 </InfoCard>
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <InfoCard title="Golden Paths: Buenas prácticas">
+                                <InfoCard title="Buenas prácticas">
                                     <GoodPracticesFolderList/>
                                 </InfoCard>
                             </Grid>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <InfoCard title="Golden Paths: How-to">
+                            <InfoCard title="How-to">
                                 <HowtoFolderList/>
                             </InfoCard>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <InfoCard title="Golden Paths: Ejemplos prácticos">
+                            <InfoCard title="Ejemplos prácticos">
                                 <ExamplesFolderList/>
                             </InfoCard>
                         </Grid>
