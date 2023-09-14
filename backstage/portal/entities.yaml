@@ -55,6 +55,15 @@ metadata:
 spec:
   owner: customers-team
 ---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: platform
+  title: Platform
+  description: Platform Domain
+spec:
+  owner: plaform-team
+---
 ###############################
 # SYSTEMS
 ###############################
@@ -87,43 +96,33 @@ spec:
   profile:
     displayName: Products
 ---
-
-####################################
-# RESOURCES
-####################################
 apiVersion: backstage.io/v1alpha1
-kind: Resource
+kind: System
 metadata:
-  name: Kubernetes
-  description: 'Kubernetes is the underlying orchestrator for the Tanzu Developer Portal'
-  links:
-    - url: https://kubernetes.io/
-      title: Kubernetes Website
-      type: website
-      icon: WebAsset
-    - url: https://kubernetes.io/docs/home/
-      title: Kubernetes Documentation
-      type: website
-      icon: WebAsset
-    - url: https://kube.academy/
-      title: VMware KubeAcademy Learning Zone
-      type: website
-      icon: WebAsset
+  name: backstage
+  description: 'Backstage is an open-source CNCF project often used by platform engineers to improving the developer experience'
   tags:
-    - kubernetes
+    - backstage
+  links:
+    - url: https://bckstage.io/
+      title: Backstage Website
+      type: website
+      icon: WebAsset
+    - url: https://backstage.io/docs/
+      title: Backstage Documentation
+      type: website
+      icon: WebAsset
+    - url: https://backstage.spotify.com/learn/
+      title: Backstage Learning Zone
+      type: website
+      icon: WebAsset
 spec:
-  type: service
-  lifecycle: production
-  providesApis:
-    - cluster-api
-  owner: user:guest
-  system: tanzu-developer-portal
+  owner: platform-team
   profile:
-    displayName: Kubernetes
+    displayName: Backstage
 ---
-
 ####################################
-# BACKSTAGE COMPONENTS
+# COMPONENTS
 ####################################
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -155,7 +154,6 @@ spec:
   profile:
     displayName: Backstage
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -189,7 +187,6 @@ spec:
     - component:backstage
   subcomponentOf: backstage
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -214,7 +211,6 @@ spec:
     - component:backstage
   subcomponentOf: backstage
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -239,7 +235,6 @@ spec:
     - component:backstage
   subcomponentOf: backstage
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -267,11 +262,9 @@ spec:
     - component:backstage
   subcomponentOf: backstage
 ---
-
 ####################################
 # DEV PORTAL COMPONENTS
 ####################################
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -296,7 +289,6 @@ spec:
   dependsOn:
     - component:backstage
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
