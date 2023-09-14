@@ -42,7 +42,7 @@ spec:
       name: Claim Pull-Request
       action: publish:github:pull-request
       input:
-        title: Platform base claim (${{ parameters.team }})
+        title: Platform tools claim (${{ parameters.team }})
         description: Solicitud de herramientas de plataforma por el equipo ${{ parameters.team }}
         repoUrl: github.com?repo=platform-argo-crossplane&owner=jaruizes
         branchName: claims-pr
@@ -54,7 +54,8 @@ spec:
       name: Register
       action: catalog:register
       input:
-        catalogInfoUrl: http://github.com/jaruizes/backstage-test/backstage-repository/catalog/generated/claims/${{values.team}}/platform-tools/catalog-info.yaml
+        catalogInfoUrl: http://github.com/jaruizes/platform-argo-crossplane/tree/claims-pr/backstage-repository/catalog/generated/claims/${{ parameters.team }}/platform-tools/catalog-info.yaml
+        optional: true
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:
