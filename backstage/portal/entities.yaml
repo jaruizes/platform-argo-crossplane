@@ -88,6 +88,7 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: products
+  title: Products
   description: 'Products System'
   tags:
     - products
@@ -100,6 +101,7 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: backstage
+  title: Backstage
   description: 'Backstage is an open-source CNCF project often used by platform engineers to improving the developer experience'
   tags:
     - backstage
@@ -438,4 +440,19 @@ spec:
   owner: user:guest
   definition:
     $text: https://github.com/kubernetes/kubernetes/blob/master/api/openapi-spec/swagger.json
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: customers-asyncapi
+  title: Customers Asyncapi
+  description: 'Cluster API is a Kubernetes subproject focused on providing declarative APIs and tooling to simplify provisioning, upgrading, and operating multiple Kubernetes clusters.'
+  tags:
+    - asyncapi
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: user:guest
+  definition:
+    $text: https://raw.githubusercontent.com/jaruizes/eda-practical-design/main/contracts/clients-service.yaml
 ---
