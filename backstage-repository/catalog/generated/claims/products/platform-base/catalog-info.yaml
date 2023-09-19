@@ -1,8 +1,0 @@
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: platform-base-products
-spec:
-  type: claim
-  owner: user:products
-  lifecycle: experimental
